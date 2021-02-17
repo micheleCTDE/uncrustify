@@ -1,0 +1,304 @@
+uncrustify (0.81.0-0debian13.0.0+0~pre) unstable; urgency=medium
+
+  * TDE version 0.81.0-dev
+  * Backported commits 5f3f392a and fb66774e from upstream.
+
+ -- Michele Calgaro <michele.calgaro@yahoo.it>  Thu, 05 Jan 2021 11:08:00 +0900
+
+uncrustify-trinity (0.72.0-0debian11.0.0+6) unstable; urgency=medium
+
+  * TDE version 0.72-0+6
+  * Backported commits 45681e88 and 64d93e3fb from upstream.
+
+ -- Michele Calgaro <michele.calgaro@yahoo.it>  Thu, 24 Dec 2020 20:14:00 +0900
+
+uncrustify-trinity (0.72.0-0debian11.0.0+0) unstable; urgency=medium
+
+  * TDE version of upstream 0.72.0
+
+ -- Michele Calgaro <michele.calgaro@yahoo.it>  Thu, 20 Dec 2020 17:52:23 +0900
+
+uncrustify (0.72.0) unstable; urgency=medium
+
+  * New upstream version 0.72.0
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Thu, 20 Dec 2020 17:34:01 +0900
+
+uncrustify (0.71.0+dfsg1-1) unstable; urgency=medium
+
+  * New upstream version 0.71.0
+  * d/control: Use debhelper-compat syntax, switch to level 12.
+  * d/control: Use python3 in B-D (Closes: #943295).
+  * d/control: Bump Standards-Version, no more changes needed.
+  * d/control: Remove unnnecessary --parallel.
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Thu, 27 Aug 2020 17:12:57 +0300
+
+uncrustify (0.69.0+dfsg1-1) unstable; urgency=medium
+
+  * New upstream version 0.69.0
+  * Remove fix_parallel_test.patch: Fixed upstream.
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Tue, 02 Jul 2019 19:00:32 +0300
+
+uncrustify (0.68.1+dfsg1-2) unstable; urgency=medium
+
+  * Add d/patches/fix_parallel_test.patch: Fix test failure on parallel run.
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Mon, 10 Dec 2018 02:36:22 +0300
+
+uncrustify (0.68.1+dfsg1-1) unstable; urgency=medium
+
+  * New upstream version 0.68.1
+  * d/control: Add python-all to Build-Depensds.
+  * d/rules: Run all tests (now disabled by default by upstream).
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Sun, 02 Dec 2018 16:19:42 +0300
+
+uncrustify (0.67+dfsg1-1) unstable; urgency=medium
+
+  * New upstream version 0.67
+  * debian/control: Move git to salsa.
+  * Add docs-remove-remote-images.patch: Remove remote images from docs.
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Mon, 18 Jun 2018 01:13:56 +0300
+
+uncrustify (0.66.1+dfsg1-1) unstable; urgency=medium
+
+  * Add debian/gbp.conf.
+  * New upstream version 0.66.1 Fixed FTBFS on some arches (Closes: #881249)
+  * Bump Standards-Version to 4.1.2 (no additional changes needed).
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Sun, 17 Dec 2017 18:49:06 +0300
+
+uncrustify (0.66+dfsg1-1) unstable; urgency=medium
+
+  * debian/control: Remove Fathi Boudra <fabo@debian.org> from uploaders.
+    (Closes: #879444.) Thanks for your job.
+  * New upstream version 0.66
+  * Bump Standards-Version to 4.1.1 (no additional changes needed).
+  * debian/control: Add more languages to short description.
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Wed, 08 Nov 2017 18:18:47 +0300
+
+uncrustify (0.65+git20170831+dfsg1-1) unstable; urgency=medium
+
+  * New upstream version 0.65+git20170831. Fixes various FTBFS and autotests
+    failures on exotic archs. (Closes: #867376)
+  * Bump Standards-Version to 4.1.0 (no additional changes needed).
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Thu, 31 Aug 2017 20:25:06 +0300
+
+uncrustify (0.65+dfsg1-1) unstable; urgency=medium
+
+  * New upstream version 0.65
+  * debian/control: Add python-minimal to Build-Depends.
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Tue, 04 Jul 2017 14:50:47 +0300
+
+uncrustify (0.64+dfsg1-1) unstable; urgency=medium
+
+  * Imported Upstream version 0.64
+    (Closes:  #748787, #814193, #594210, #775517, #594206, #616708)
+  * Remove non-free documentation/htdocs/project-support.jpg.
+  * Imported debian dir from previous version.
+  * Remove "debian/<q" file.
+  * Remove fix-ftbfs-with-gcc-4.7.patch (Fixed upstream).
+  * debian/control: Switch dependence from autotools to cmake.
+  * debian/control, debian/compat: Set compatibility level to 9.
+  * debian/rules: Remove legacy PRONY records.
+  * debian/control: Change Homepage to github.
+  * debian/watch: Update to github using current naming scheme.
+  * debian/copyright: Add myself.
+  * Install README.md and documentation dir into package's docs.
+  * debian/rules: Remove tests results on clean.
+  * debian/control: Set myself as maintainer. (Johann Rudloff is out of
+    business, thanks a lot for all; Fathi Boudra acked this.)
+  * Bump Standards-Version to 3.9.8 (no additional changes needed).
+  * Add debian/TODO file.
+  * debian/cotrol: Add link to collab-maint's git.
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Sat, 03 Dec 2016 20:19:22 +0300
+
+uncrustify (0.59+dfsg1-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Remove non-free file (project-support.jpg). Closes: #753760
+
+ -- Mathieu Malaterre <malat@debian.org>  Fri, 16 Jan 2015 16:52:15 +0100
+
+uncrustify (0.59-2) unstable; urgency=low
+
+  * Fix FTBFS with gcc 4.7 by fixing missing <unistd.h> include.
+    (Closes: #667404)
+
+ -- Fathi Boudra <fabo@debian.org>  Mon, 21 May 2012 15:40:46 +0300
+
+uncrustify (0.59-1) unstable; urgency=low
+
+  * New upstream release.
+  * Add myself to Uploaders.
+
+ -- Fathi Boudra <fabo@debian.org>  Sat, 31 Dec 2011 12:49:32 +0200
+
+uncrustify (0.57-1) unstable; urgency=low
+
+  * New upstream release.
+
+  [ Fathi Boudra ]
+  * Removed patch to check for NULL - stolen upstream.
+  * Bumped Standards-Version to 3.9.1 (no changes needed).
+
+ -- Johann Rudloff <cypheon@gmx.net>  Mon, 21 Feb 2011 11:54:28 +0200
+
+uncrustify (0.56-2) unstable; urgency=low
+
+  [ Fathi Boudra ]
+  * Added patch to check for NULL to prevent a segmentation fault.
+    (Closes: #580195)
+  * Bumped Standards-Version to 3.9.0 (no changes needed).
+
+ -- Johann Rudloff <cypheon@gmx.net>  Thu, 01 Jul 2010 20:34:01 +0300
+
+uncrustify (0.56-1) unstable; urgency=low
+
+  * New upstream release.
+
+  [ Fathi Boudra ]
+  * Switch to dpkg-source 3.0 (quilt) format.
+  * debian/control:
+    - bumped debhelper version to 7.4.15
+    - fixed typo in long description.
+  * debian/copyright:
+    - added email author.
+    - added myself.
+
+ -- Johann Rudloff <cypheon@gmx.net>  Tue, 20 Apr 2010 13:08:29 +0300
+
+uncrustify (0.55-1) unstable; urgency=low
+
+  * New upstream release (Closes: #540817)
+
+  [ Fathi Boudra ]
+  * debian/patches/manpage_fix_hyphens.diff: removed - merged upstream
+  * debian/compat: bumped to 7
+  * debian/control:
+    - bumped debhelper version to 7.4.13
+    - bumped Standards-Version to 3.8.4 (no changes needed)
+    - added ${misc:Depends}
+  * debian/docs: updated
+  * debian/rules: rewrited from scratch to use dh and enabled parallel build
+
+ -- Johann Rudloff <cypheon@gmx.net>  Wed, 17 Feb 2010 09:18:41 +0100
+
+uncrustify (0.52-1) unstable; urgency=low
+
+  * New upstream release (closes: #526100)
+  * debian/copyright: changed years and wording of copyright
+  * debian/patches/manpage_fix_hyphens.diff: added patch to fix fixed hyphens
+    used as minus signs in manpage
+  * debian/rules: included usage of quilt
+  * debian/control: added build dependency quilt
+    bumped Standards-Version to 3.8.1 (no changes required)
+
+ -- Johann Rudloff <cypheon@gmx.net>  Thu, 30 Apr 2009 11:32:27 +0200
+
+uncrustify (0.48-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/rules: removed CFLAGS settings (done by dpkg-buildpackage)
+
+ -- Johann Rudloff <cypheon@gmx.net>  Tue, 22 Jul 2008 11:19:54 +0200
+
+uncrustify (0.47-1) unstable; urgency=low
+
+  * New upstream release (closes: #479372)
+  * Bumped Standards-Version to 3.8.0 (no changes required)
+  * removed debian/uncrustify.1, since upstream sources now include a
+    manpage
+  * debian/rules: removed call to dh_installman, manpage is installed by
+    make install
+  * debian/rules: removed unneeded call to dh_installdirs
+
+ -- Johann Rudloff <cypheon@gmx.net>  Sun, 08 Jun 2008 10:09:53 +0200
+
+uncrustify (0.44-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/uncrustify.1: updated version number and date
+
+ -- Johann Rudloff <cypheon@gmx.net>  Sun, 24 Feb 2008 09:13:49 +0100
+
+uncrustify (0.43-1) unstable; urgency=low
+
+  * New upstream release (closes: #461631)
+  * Bumped Standards-Version to 3.7.3 (no changes required)
+  * debian/copyright: updated years of copyright
+  * debian/control: moved homepage address from description to a separate field
+  * debian/uncrustify.1: updated year and month
+  * debian/rules: copy update config.{sub,guess} into source tree in
+    config.status target, remove them in clean target
+
+ -- Johann Rudloff <cypheon@gmx.net>  Thu, 10 Jan 2008 15:37:19 +0100
+
+uncrustify (0.41-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Johann Rudloff <cypheon@gmx.net>  Mon, 12 Nov 2007 21:22:25 +0100
+
+uncrustify (0.40-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Johann Rudloff <cypheon@gmx.net>  Tue, 16 Oct 2007 21:26:13 +0200
+
+uncrustify (0.39-1) unstable; urgency=low
+
+  * New Upstream Version
+
+ -- Johann Rudloff <cypheon@gmx.net>  Wed, 26 Sep 2007 23:50:30 +0200
+
+uncrustify (0.38-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Johann Rudloff <cypheon@gmx.net>  Thu, 06 Sep 2007 22:52:16 +0200
+
+uncrustify (0.37-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/uncrustify.1: added new command line options
+  * debian/uncrustify.1: changes in formatting and description
+
+ -- Johann Rudloff <cypheon@gmx.net>  Sun, 19 Aug 2007 19:33:08 +0200
+
+uncrustify (0.36-1) unstable; urgency=low
+
+  * New upstream release (closes: #434938, #434939)
+
+ -- Johann Rudloff <cypheon@gmx.net>  Tue, 07 Aug 2007 13:49:41 +0200
+
+uncrustify (0.35-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Johann Rudloff <cypheon@gmx.net>  Sat, 21 Jul 2007 20:41:52 +0200
+
+uncrustify (0.33-1) unstable; urgency=low
+
+  * New upstream release (closes: #416469)
+  * Added debian/watch file
+  * debian/uncrustify.1: added new command line options
+  * debian/uncrustify.1: removed leading colons
+  * debian/copyright: updated years of copyright
+  * debian/copyright: updated parts concerning cmpcfg.pl, since it
+    now contains a proper license statement
+
+ -- Johann Rudloff <cypheon@gmx.net>  Fri, 30 Mar 2007 20:51:27 +0200
+
+uncrustify (0.30-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Johann Rudloff <cypheon@gmx.net>  Sat, 25 Nov 2006 14:06:44 +0100
