@@ -392,6 +392,8 @@ void setup_crash_handling()
 
 #endif
 
+bool g_dump_cycle;
+
 
 int main(int argc, char *argv[])
 {
@@ -606,17 +608,19 @@ int main(int argc, char *argv[])
    {
       // not using a file list, source_list is nullptr
    }
-   const char  *prefix = arg.Param("--prefix");
-   const char  *suffix = arg.Param("--suffix");
-   const char  *assume = arg.Param("--assume");
+   const char *prefix = arg.Param("--prefix");
+   const char *suffix = arg.Param("--suffix");
+   const char *assume = arg.Param("--assume");
 
-   bool        no_backup        = arg.Present("--no-backup");
-   bool        replace          = arg.Present("--replace");
-   bool        keep_mtime       = arg.Present("--mtime");
-   bool        update_config    = arg.Present("--update-config");
-   bool        update_config_wd = arg.Present("--update-config-with-doc");
-   bool        detect           = arg.Present("--detect");
-   bool        pfile_csv        = arg.Present("--debug-csv-format");
+   bool       no_backup        = arg.Present("--no-backup");
+   bool       replace          = arg.Present("--replace");
+   bool       keep_mtime       = arg.Present("--mtime");
+   bool       update_config    = arg.Present("--update-config");
+   bool       update_config_wd = arg.Present("--update-config-with-doc");
+   bool       detect           = arg.Present("--detect");
+   bool       pfile_csv        = arg.Present("--debug-csv-format");
+
+   g_dump_cycle = arg.Present("--dump");
 
    std::string parsed_file_csv;
 
@@ -1961,6 +1965,29 @@ static void uncrustify_start(const deque<int> &data)
 } // uncrustify_start
 
 
+void dump_cycle(const char *firstline)
+{
+   static int idx = 0;
+   char       dumpfile[256];
+
+   if (!g_dump_cycle)
+   {
+      return;
+   }
+   sprintf(dumpfile, "dump_%d.log", idx);
+   ++idx;
+
+   FILE *p_file = fopen(dumpfile, "wb");
+
+   if (p_file != nullptr)
+   {
+      fprintf(p_file, "%s\n--------------\n", firstline);
+      output_parsed(p_file, false);
+      fclose(p_file);
+   }
+}
+
+
 void uncrustify_file(const file_mem &fm, FILE *pfout,
                      const char *parsed_file, bool defer_uncrustify_end)
 {
@@ -2031,6 +2058,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
    }
 
    uncrustify_start(data);
+   dump_cycle("After uncrustify_start()");
 
    cpd.unc_stage = unc_stage_e::OTHER;
 
@@ -2092,6 +2120,8 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
          newlines_remove_newlines();
       }
       cpd.pass_count = 3;
+
+      dump_cycle("Before first while loop");
 
       do
       {
@@ -2189,6 +2219,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
               && cpd.pass_count-- > 0);
 
       mark_comments();
+      dump_cycle("After first while loop");
 
       // Add balanced spaces around nested params
       log_rule_B("sp_balance_nested_parens");
@@ -2255,6 +2286,8 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       // Align everything else, reindent and break at code_width
       first = true;
 
+      dump_cycle("Before second while loop");
+
       do
       {
          align_all();
@@ -2292,7 +2325,10 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
                first = false;
             }
          }
+				 dump_cycle("Inside second while loop");
       } while (old_changes != cpd.changes);
+
+      dump_cycle("After second while loop");
 
       // And finally, align the backslash newline stuff
       align_right_comments();
@@ -2303,6 +2339,7 @@ void uncrustify_file(const file_mem &fm, FILE *pfout,
       {
          align_backslash_newline();
       }
+      dump_cycle("Final version");
       // which output is to be done?
 
       if (cpd.html_file == nullptr)

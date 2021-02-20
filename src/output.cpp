@@ -447,12 +447,14 @@ static void cmt_output_indent(size_t brace_col, size_t base_col, size_t column)
 } // cmt_output_indent
 
 
-void output_parsed(FILE *pfile)
+void output_parsed(FILE *pfile, bool withOptions)
 {
    const char *eol_marker = get_eol_marker();
 
-   save_option_file(pfile, false, true);
-
+   if (withOptions)
+   {
+      save_option_file(pfile, false, true);
+   }
    fprintf(pfile, "# -=====-%s", eol_marker);
    fprintf(pfile, "# number of loops               = %d\n", cpd.changes);
    fprintf(pfile, "# -=====-%s", eol_marker);
