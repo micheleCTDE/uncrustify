@@ -774,7 +774,7 @@ void output_text(FILE *pfile)
    cpd.did_newline = true;
    cpd.column      = 1;
 
-   if (cpd.bom)
+   if (cpd.hasBom)
    {
       write_bom();
    }

@@ -2050,7 +2050,7 @@ void uncrustify_file(const MemoryFile &fm, FILE *pfout, const char *parsed_file,
    const deque<int> &data = fm.data;
 
    // Save off the encoding and whether a BOM is required
-   cpd.bom      = fm.hasBom;
+   cpd.hasBom   = fm.hasBom;
    cpd.encoding = fm.encoding;
 
    if (  options::utf8_force()
@@ -2082,11 +2082,11 @@ void uncrustify_file(const MemoryFile &fm, FILE *pfout, const char *parsed_file,
 
    if (av == IARF_REMOVE)
    {
-      cpd.bom = false;
+      cpd.hasBom = false;
    }
    else if (av != IARF_IGNORE)
    {
-      cpd.bom = true;
+      cpd.hasBom = true;
    }
    // Check for embedded 0's (represents a decoding failure or corrupt file)
    size_t count_line   = 1;

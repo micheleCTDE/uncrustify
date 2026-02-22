@@ -277,7 +277,7 @@ struct cp_data_t
    bool                output_trailspace;
    bool                output_tab_as_space;
 
-   bool                bom;
+   bool                hasBom;
    E_CharEncoding      encoding;
 
    // bumped up when a line is split or indented
