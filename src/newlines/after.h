@@ -19,6 +19,6 @@ void newline_after_multiline_comment();
  *
  * May not work with PAWN
  */
-void newline_after_return(Chunk *start);
+void newline_after_return(const Chunk *start);
 
 #endif /* NEWLINES_AFTER_H_INCLUDED */

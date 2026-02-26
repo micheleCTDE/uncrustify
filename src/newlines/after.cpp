@@ -54,7 +54,7 @@ void newline_after_multiline_comment()
 } // newline_after_multiline_comment
 
 
-void newline_after_return(Chunk *start)
+void newline_after_return(const Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
