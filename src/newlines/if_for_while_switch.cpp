@@ -113,8 +113,8 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
 
    Chunk *prev;
 
-   LOG_FMT(LNEWLINE, "%s(%d): start->Text() is '%s', type is %s, orig line is %zu, orig col is %zu\n",
-           __func__, __LINE__, start->Text(), get_token_name(start->GetType()), start->GetOrigLine(), start->GetOrigCol());
+   LOG_FMT(LNEWLINE, "%s(%d): start->text is '%s', type is %s, orig line is %zu, orig col is %zu\n",
+           __func__, __LINE__, start->GetLogText(), get_token_name(start->GetType()), start->GetOrigLine(), start->GetOrigCol());
 
    log_rule_B("nl_define_macro");
 
@@ -131,8 +131,8 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
    {
       return;
    }
-   LOG_FMT(LNEWLINE, "%s(%d): pc->Text() is '%s', type is %s, orig line is %zu, orig col is %zu\n",
-           __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
+   LOG_FMT(LNEWLINE, "%s(%d): text is '%s', type is %s, orig line is %zu, orig col is %zu\n",
+           __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
 
    /*
     * if we're dealing with an if, we actually want to add or remove
@@ -155,8 +155,8 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
             {
                return;
             }
-            LOG_FMT(LNEWLINE, "%s(%d): pc->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
-                    __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
+            LOG_FMT(LNEWLINE, "%s(%d): text is '%s', type %s, orig line %zu, orig col %zu\n",
+                    __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
          }
          else
          {
@@ -176,8 +176,8 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
       {
          return;
       }
-      LOG_FMT(LNEWLINE, "%s(%d): pc->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
-              __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
+      LOG_FMT(LNEWLINE, "%s(%d): text is '%s', type %s, orig line %zu, orig col %zu\n",
+              __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
    }
    bool isVBrace = (pc->Is(CT_VBRACE_CLOSE));
 
@@ -252,8 +252,8 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
          next = next->GetNextNnl();
       } while (true);
 
-      LOG_FMT(LNEWLINE, "%s(%d): next->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
-              __func__, __LINE__, next->Text(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
+      LOG_FMT(LNEWLINE, "%s(%d): next->text is '%s', type %s, orig line %zu, orig col %zu\n",
+              __func__, __LINE__, next->GetLogText(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
 
       if (next->IsNot(CT_BRACE_CLOSE))
       {
@@ -264,8 +264,8 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
 
          if ((next = pc->GetNextNvb())->IsNewline())
          {
-            LOG_FMT(LNEWLINE, "%s(%d): next->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
-                    __func__, __LINE__, next->Text(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
+            LOG_FMT(LNEWLINE, "%s(%d): next->text is '%s', type %s, orig line %zu, orig col %zu\n",
+                    __func__, __LINE__, next->GetLogText(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
             nl_count += next->GetNlCount();
             LOG_FMT(LNEWLINE, "%s(%d): new line count is %zu\n", __func__, __LINE__, nl_count);
          }
@@ -278,19 +278,19 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
             if (  ((next = pc->GetNext())->IsNotNullChunk())
                && next->IsComment())
             {
-               LOG_FMT(LNEWLINE, "%s(%d): next->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
-                       __func__, __LINE__, next->Text(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
+               LOG_FMT(LNEWLINE, "%s(%d): next->text is '%s', type %s, orig line %zu, orig col %zu\n",
+                       __func__, __LINE__, next->GetLogText(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
                pc = next;
-               LOG_FMT(LNEWLINE, "%s(%d): pc->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
-                       __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
+               LOG_FMT(LNEWLINE, "%s(%d): text is '%s', type %s, orig line %zu, orig col %zu\n",
+                       __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
             }
 
             if ((next = newline_add_after(pc))->IsNullChunk())
             {
                return;
             }
-            LOG_FMT(LNEWLINE, "%s(%d): next->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
-                    __func__, __LINE__, next->Text(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
+            LOG_FMT(LNEWLINE, "%s(%d): next->text is '%s', type %s, orig line %zu, orig col %zu\n",
+                    __func__, __LINE__, next->GetLogText(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
             double_newline(next);
          }
          else if (nl_count == 1) // if we don't have enough newlines
@@ -302,25 +302,25 @@ void newlines_if_for_while_switch_post_blank_lines(Chunk *start, uncrustify::iar
             {
                LOG_FMT(LNEWLINE, "%s(%d): have_pre_vbrace_nl is TRUE\n", __func__, __LINE__);
                next = newline_add_after(pc);
-               LOG_FMT(LNEWLINE, "%s(%d): next->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
-                       __func__, __LINE__, next->Text(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
+               LOG_FMT(LNEWLINE, "%s(%d): next->text is '%s', type %s, orig line %zu, orig col %zu\n",
+                       __func__, __LINE__, next->GetLogText(), get_token_name(next->GetType()), next->GetOrigLine(), next->GetOrigCol());
             }
             else
             {
                LOG_FMT(LNEWLINE, "%s(%d): have_pre_vbrace_nl is FALSE\n", __func__, __LINE__);
                prev = next->GetPrevNnl();
-               LOG_FMT(LNEWLINE, "%s(%d): prev->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
-                       __func__, __LINE__, prev->Text(), get_token_name(prev->GetType()), prev->GetOrigLine(), prev->GetOrigCol());
+               LOG_FMT(LNEWLINE, "%s(%d): prev->text is '%s', type %s, orig line %zu, orig col %zu\n",
+                       __func__, __LINE__, prev->GetLogText(), get_token_name(prev->GetType()), prev->GetOrigLine(), prev->GetOrigCol());
                pc = next->GetNextNl();
-               LOG_FMT(LNEWLINE, "%s(%d): pc->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
-                       __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
+               LOG_FMT(LNEWLINE, "%s(%d): text is '%s', type %s, orig line %zu, orig col %zu\n",
+                       __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
                Chunk *pc2 = pc->GetNext();
 
                if (pc2->IsNotNullChunk())
                {
                   pc = pc2;
-                  LOG_FMT(LNEWLINE, "%s(%d): pc->Text() is '%s', type %s, orig line %zu, orig col %zu\n",
-                          __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
+                  LOG_FMT(LNEWLINE, "%s(%d): text is '%s', type %s, orig line %zu, orig col %zu\n",
+                          __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()), pc->GetOrigLine(), pc->GetOrigCol());
                }
                else
                {
@@ -358,8 +358,8 @@ void newlines_if_for_while_switch_pre_blank_lines(Chunk *start, uncrustify::iarf
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LNEWLINE, "%s(%d): start->Text() is '%s', type is %s, orig line is %zu, orig col is %zu\n",
-           __func__, __LINE__, start->Text(), get_token_name(start->GetType()), start->GetOrigLine(), start->GetOrigCol());
+   LOG_FMT(LNEWLINE, "%s(%d): start->text is '%s', type is %s, orig line is %zu, orig col is %zu\n",
+           __func__, __LINE__, start->GetLogText(), get_token_name(start->GetType()), start->GetOrigLine(), start->GetOrigCol());
 
    log_rule_B("nl_define_macro");
 

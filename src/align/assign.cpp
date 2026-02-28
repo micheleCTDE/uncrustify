@@ -91,7 +91,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): orig line is %zu, check pc->Text() is '%s', type is %s, m_parentType is %s, parent_type is enum : %s\n",
+      LOG_FMT(LALASS, "%s(%d): orig line is %zu, check text is '%s', type is %s, m_parentType is %s, parent_type is enum : %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()), (parent_is_enum ? "true" : "false"));
 
       if (nl_count != 0)
@@ -99,7 +99,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
          if (vdas_pc->IsNotNullChunk())
          {
             LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig line %zu, orig col is %zu\n",
-                    __func__, __LINE__, vdas_pc->Text(), vdas_pc->GetOrigLine(), vdas_pc->GetOrigCol());
+                    __func__, __LINE__, vdas_pc->GetLogText(), vdas_pc->GetOrigLine(), vdas_pc->GetOrigCol());
             vdas.Add(vdas_pc);
             skip_budget = myskip_cfg;  // Reset budget after adding
             vdas_pc     = Chunk::NullChunkPtr;
@@ -243,7 +243,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
                || pc->Is(CT_ASSIGN_FUNC_PROTO)))      // Foo( const Foo & ) = delete;
          {
             LOG_FMT(LALASS, "%s(%d): fcnDefault[%zu].Add on '%s' on orig line %zu, orig col is %zu\n",
-                    __func__, __LINE__, fcn_idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+                    __func__, __LINE__, fcn_idx, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
 
             if (++fcn_idx == fcnDefault.size())
             {
@@ -261,7 +261,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
             if (pc->Is(CT_ASSIGN_DEFAULT_ARG))  // Foo( int bar = 777 );
             {
                LOG_FMT(LALASS, "%s(%d): default: fcnDefault[%zu].Add on '%s' on orig line %zu, orig col is %zu\n",
-                       __func__, __LINE__, fcn_idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+                       __func__, __LINE__, fcn_idx, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
 
                if (++fcn_idx == fcnDefault.size())
                {
@@ -275,7 +275,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
             else if (pc->Is(CT_ASSIGN_FUNC_PROTO))  // Foo( const Foo & ) = delete;
             {
                LOG_FMT(LALASS, "%s(%d): proto: fcnProto.Add on '%s' on orig line %zu, orig col is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+                       __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
                fcnProto.Add(pc);
                skip_budget = myskip_cfg;  // Reset budget after adding
             }
@@ -303,7 +303,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
             if (pc->Is(CT_ASSIGN))
             {
                LOG_FMT(LALASS, "%s(%d): as.Add on '%s' on orig line %zu, orig col is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+                       __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
                as.Add(pc);
                skip_budget = myskip_cfg;  // Reset budget after adding
             }
@@ -315,7 +315,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
    if (vdas_pc->IsNotNullChunk())
    {
       LOG_FMT(LALASS, "%s(%d): vdas.Add on '%s' on orig line %zu, orig col is %zu\n",
-              __func__, __LINE__, vdas_pc->Text(), vdas_pc->GetOrigLine(), vdas_pc->GetOrigCol());
+              __func__, __LINE__, vdas_pc->GetLogText(), vdas_pc->GetOrigLine(), vdas_pc->GetOrigCol());
       vdas.Add(vdas_pc);
       vdas_pc = Chunk::NullChunkPtr;
    }
@@ -332,7 +332,7 @@ Chunk *align_assign(Chunk *first, size_t span, size_t thresh, bool parent_is_enu
    if (pc->IsNotNullChunk())
    {
       LOG_FMT(LALASS, "%s(%d): done on '%s' on orig line %zu\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine());
+              __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine());
    }
    else
    {

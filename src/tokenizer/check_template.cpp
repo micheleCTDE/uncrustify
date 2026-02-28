@@ -58,7 +58,7 @@ Chunk *handle_double_angle_close(Chunk *pc)
          && (pc->GetOrigColEnd() + 1) == next->GetOrigCol()
          && next->GetParentType() == CT_NONE)
       {
-         pc->Str().append('>');
+         pc->Text().append('>');
          pc->SetType(CT_SHIFT);
          pc->SetOrigColEnd(next->GetOrigColEnd());
 
@@ -105,18 +105,18 @@ void check_template(Chunk *start, bool in_type_cast)
          LOG_FMT(LTEMPL, "%s(%d): type is %s, level is %zu\n",
                  __func__, __LINE__, get_token_name(pc->GetType()), level);
 
-         if (  (pc->GetStr()[0] == '>')
+         if (  (pc->GetText()[0] == '>')
             && (pc->Len() > 1))
          {
-            if (pc->GetStr()[1] == '=')                         // Issue #1462 and #2565
+            if (pc->GetText()[1] == '=')                         // Issue #1462 and #2565
             {
                LOG_FMT(LTEMPL, "%s(%d): do not split '%s' at orig line %zu, orig col %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+                       __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
             }
             else
             {
                LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig line %zu, orig col %zu}\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+                       __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
                split_off_angle_close(pc);
             }
          }
@@ -279,7 +279,7 @@ void check_template(Chunk *start, bool in_type_cast)
 
          if (  num_tokens > 0
             && (tokens[num_tokens - 1] == CT_ANGLE_OPEN)
-            && (pc->GetStr()[0] == '>')
+            && (pc->GetText()[0] == '>')
             && (pc->Len() > 1)
             && (  options::tok_split_gte()
                || (  (  pc->IsString(">>")
@@ -289,7 +289,7 @@ void check_template(Chunk *start, bool in_type_cast)
                         && in_type_cast)))))
          {
             LOG_FMT(LTEMPL, "%s(%d): {split '%s' at orig line %zu, orig col %zu}\n",
-                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+                    __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
 
             split_off_angle_close(pc);
          }

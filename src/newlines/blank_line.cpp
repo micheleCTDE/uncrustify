@@ -81,7 +81,7 @@ void do_blank_lines()
       else
       {
          char copy[1000];
-         LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
+         LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy), get_token_name(pc->GetType()));
       }
       LOG_FMT(LBLANK, "%s(%d): new line count is %zu\n",
@@ -95,9 +95,9 @@ void do_blank_lines()
 
       if (prev->IsNotNullChunk())
       {
-         LOG_FMT(LBLANK, "%s(%d): prev orig line is %zu, prev->Text() '%s', prev->GetType() is %s\n",
+         LOG_FMT(LBLANK, "%s(%d): prev orig line is %zu, prev->text '%s', prev->GetType() is %s\n",
                  __func__, __LINE__, pc->GetOrigLine(),
-                 prev->Text(), get_token_name(prev->GetType()));
+                 prev->GetLogText(), get_token_name(prev->GetType()));
 
          if (prev->Is(CT_IGNORED))
          {
@@ -119,7 +119,7 @@ void do_blank_lines()
          line_added = true;
          pc->SetNlCount(pc->GetNlCount() + 1);
          LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', new line count is now %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetNlCount());
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), pc->GetNlCount());
       }
 
       // Limit consecutive newlines
@@ -452,7 +452,7 @@ void do_blank_lines()
                   continue;
                }
                LOG_FMT(LBLANK, "%s(%d): %zu:%zu token is '%s'\n",
-                       __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(), tmp->Text());
+                       __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(), tmp->GetLogText());
 
                if (tmp->TestFlags(PCF_VAR_DEF))
                {
@@ -649,10 +649,10 @@ void do_blank_lines()
       {
          pc->SetNlCount(pc->GetNlCount() - 1);
          LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', new line count is now %zu\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetNlCount());
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), pc->GetNlCount());
       }
       LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', end new line count is now %zu\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetNlCount());
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), pc->GetNlCount());
    }
 } // do_blank_lines
 
@@ -663,8 +663,8 @@ void newlines_insert_blank_lines()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      //LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
-      //        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+      //LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
+      //        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
       if (pc->Is(CT_IF))
       {
          newlines_if_for_while_switch_pre_blank_lines(pc, options::nl_before_if());

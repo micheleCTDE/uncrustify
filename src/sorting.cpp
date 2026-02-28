@@ -120,7 +120,7 @@ static int get_chunk_priority(Chunk *pc)
    {
       if (include_categories[i] != nullptr)
       {
-         if (std::regex_match(pc->Text(), include_categories[i]->regex))
+         if (std::regex_match(pc->GetLogText(), include_categories[i]->regex))
          {
             category = i;
             break;
@@ -205,9 +205,9 @@ static UncText chunk_sort_str(Chunk *pc)
 {
    if (pc->GetParentType() == CT_PP_INCLUDE)
    {
-      return(UncText{ pc->GetStr(), 0, pc->Len() - 1 });
+      return(UncText{ pc->GetText(), 0, pc->Len() - 1 });
    }
-   return(pc->GetStr());
+   return(pc->GetText());
 }
 
 
@@ -238,8 +238,8 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
 
       if (options::mod_sort_incl_import_prioritize_filename())
       {
-         bool s1_contains_filename = text_contains_filename_without_ext(s1.c_str());
-         bool s2_contains_filename = text_contains_filename_without_ext(s2.c_str());
+         bool s1_contains_filename = text_contains_filename_without_ext(s1.GetLogText());
+         bool s2_contains_filename = text_contains_filename_without_ext(s2.GetLogText());
 
          if (  s1_contains_filename
             && !s2_contains_filename)
@@ -294,9 +294,9 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
          return(ppc1 - ppc2);
       }
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
+              __func__, __LINE__, pc1->GetLogText(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
+              __func__, __LINE__, pc2->GetLogText(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
 
       int ret_val = UncText::compare(s1, s2, std::min(s1.size(), s2.size()), tcare);
       LOG_FMT(LSORT, "%s(%d): ret_val is %d\n",
@@ -314,28 +314,28 @@ static int compare_chunks(Chunk *pc1, Chunk *pc2, bool tcare)
       // Same word, same length. Step to the next chunk.
       pc1 = pc1->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
+              __func__, __LINE__, pc1->GetLogText(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
 
       if (pc1->Is(CT_MEMBER))
       {
          pc1 = pc1->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-                 __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
+                 __func__, __LINE__, pc1->GetLogText(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
       }
       pc2 = pc2->GetNext();
       LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
+              __func__, __LINE__, pc2->GetLogText(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
 
       if (pc2->Is(CT_MEMBER))
       {
          pc2 = pc2->GetNext();
          LOG_FMT(LSORT, "%s(%d): text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-                 __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
+                 __func__, __LINE__, pc2->GetLogText(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
       }
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc1->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc1->Text(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
+              __func__, __LINE__, pc1->GetLogText(), pc1->Len(), pc1->GetOrigLine(), pc1->GetOrigCol());
       LOG_FMT(LSORT, "%s(%d): >>>text is %s, pc2->len is %zu, line is %zu, column is %zu\n",
-              __func__, __LINE__, pc2->Text(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
+              __func__, __LINE__, pc2->GetLogText(), pc2->Len(), pc2->GetOrigLine(), pc2->GetOrigCol());
 
       // If we hit a newline or null chuck, we are done
       if (  pc1->IsNullChunk()
@@ -373,7 +373,7 @@ static void do_the_sort(Chunk **chunks, size_t num_chunks)
 
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
-      LOG_FMT(LSORT, " [%s]", chunks[idx]->Text());
+      LOG_FMT(LSORT, " [%s]", chunks[idx]->GetLogText());
    }
 
    LOG_FMT(LSORT, "\n");
@@ -451,7 +451,7 @@ static void delete_chunks_on_line_having_chunk(Chunk *chunk)
    {
       Chunk *next_pc = pc->GetNext();
       LOG_FMT(LCHUNK, "%s(%d): Removed '%s' on orig line %zu\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine());
+              __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine());
 
       if (pc->IsNewline())
       {
@@ -521,9 +521,9 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
 
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
-      if (chunks[idx]->GetStr().size() > 0)
+      if (chunks[idx]->GetText().size() > 0)
       {
-         c_idx = chunks[idx]->GetStr().at(0);
+         c_idx = chunks[idx]->GetText().at(0);
       }
       else
       {
@@ -544,7 +544,7 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
 
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
-      chunk_has_dot = has_dot(chunks[idx]->GetStr());
+      chunk_has_dot = has_dot(chunks[idx]->GetText());
 
       if (  chunk_last_has_dot != chunk_has_dot
          && idx > 0)
@@ -577,7 +577,7 @@ static void group_imports_by_adding_newlines(Chunk **chunks, size_t num_chunks)
    for (size_t idx = 0; idx < num_chunks; idx++)
    {
       auto const &chunk_text = chunk_sort_str(chunks[idx]);
-      chunk_has_filename = text_contains_filename_without_ext(chunk_text.c_str());
+      chunk_has_filename = text_contains_filename_without_ext(chunk_text.GetLogText());
 
       if (  !chunk_has_filename
          && last_chunk_has_filename)
@@ -631,7 +631,7 @@ void sort_imports()
             if (num_chunks < max_number_to_sort)
             {
                LOG_FMT(LSORT, "%s(%d): p_imp is %s\n",
-                       __func__, __LINE__, p_imp->Text());
+                       __func__, __LINE__, p_imp->GetLogText());
                chunks[num_chunks++] = p_imp;
             }
             else

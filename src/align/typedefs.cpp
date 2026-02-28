@@ -49,7 +49,7 @@ void align_typedefs(size_t span)
             as.Add(pc);
             LOG_FMT(LALTD, "%s(%d): typedef @ %zu:%zu, tag '%s' @ %zu:%zu\n",
                     __func__, __LINE__, c_typedef->GetOrigLine(), c_typedef->GetOrigCol(),
-                    pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+                    pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
             c_typedef = Chunk::NullChunkPtr;
          }
       }

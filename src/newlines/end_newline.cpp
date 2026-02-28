@@ -38,16 +38,16 @@ void newline_end_newline(Chunk *br_close)
       if (nl.TestFlags(PCF_IN_PREPROC))
       {
          nl.SetType(CT_NL_CONT);
-         nl.Str() = "\\\n";
+         nl.Text() = "\\\n";
       }
       else
       {
          nl.SetType(CT_NEWLINE);
-         nl.Str() = "\n";
+         nl.Text() = "\n";
       }
       MARK_CHANGE();
       LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline after '%s'\n",
-              __func__, __LINE__, br_close->GetOrigLine(), br_close->GetOrigCol(), br_close->Text());
+              __func__, __LINE__, br_close->GetOrigLine(), br_close->GetOrigCol(), br_close->GetLogText());
       nl.CopyAndAddAfter(br_close);
    }
 } // newline_end_newline

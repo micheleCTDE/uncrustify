@@ -19,7 +19,7 @@ void newline_min_after(Chunk *ref, size_t count, E_PcfFlag flag)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LNEWLINE, "%s(%d): for '%s', at orig line %zu, count is %zu,\n   flag is %s:",
-           __func__, __LINE__, ref->Text(), ref->GetOrigLine(), count,
+           __func__, __LINE__, ref->GetLogText(), ref->GetOrigLine(), count,
            pcf_flags_str(flag).c_str());
    log_func_stack_inline(LNEWLINE);
 

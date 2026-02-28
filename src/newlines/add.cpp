@@ -31,7 +31,7 @@ Chunk *newline_add_after(Chunk *pc)
       return(next);
    }
    LOG_FMT(LNEWLINE, "%s(%d): '%s' on line %zu",
-           __func__, __LINE__, pc->Text(), pc->GetOrigLine());
+           __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine());
    log_func_stack_inline(LNEWLINE);
 
    Chunk nl;
@@ -60,8 +60,8 @@ Chunk *newline_add_before(Chunk *pc)
       // Already has a newline before this chunk
       return(prev);
    }
-   LOG_FMT(LNEWLINE, "%s(%d): Text() '%s', on orig line is %zu, orig col is %zu, pc column is %zu",
-           __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetColumn());
+   LOG_FMT(LNEWLINE, "%s(%d): text '%s', on orig line is %zu, orig col is %zu, pc column is %zu",
+           __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetColumn());
    log_func_stack_inline(LNEWLINE);
 
    setup_newline_add(prev, &nl, pc);
@@ -85,11 +85,11 @@ Chunk *newline_add_between(Chunk *start, Chunk *end)
    {
       return(Chunk::NullChunkPtr);
    }
-   LOG_FMT(LNEWLINE, "%s(%d): start->Text() is '%s', type is %s, orig line is %zu, orig col is %zu\n",
-           __func__, __LINE__, start->Text(), get_token_name(start->GetType()),
+   LOG_FMT(LNEWLINE, "%s(%d): start->text is '%s', type is %s, orig line is %zu, orig col is %zu\n",
+           __func__, __LINE__, start->GetLogText(), get_token_name(start->GetType()),
            start->GetOrigLine(), start->GetOrigCol());
-   LOG_FMT(LNEWLINE, "%s(%d): and end->Text() is '%s', orig line is %zu, orig col is %zu\n  ",
-           __func__, __LINE__, end->Text(), end->GetOrigLine(), end->GetOrigCol());
+   LOG_FMT(LNEWLINE, "%s(%d): and end->text is '%s', orig line is %zu, orig col is %zu\n  ",
+           __func__, __LINE__, end->GetLogText(), end->GetOrigLine(), end->GetOrigCol());
    log_func_stack_inline(LNEWLINE);
 
    // Back-up check for one-liners (should never be true!)

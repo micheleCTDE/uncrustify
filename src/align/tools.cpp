@@ -62,7 +62,7 @@ Chunk *scan_ib_line(Chunk *start)
          && pc->GetLevel() >= start->GetLevel())
    {
       //LOG_FMT(LSIB, "%s:     '%s'   col %d/%d line %zu\n", __func__,
-      //        pc->Text(), pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigLine());
+      //        pc->GetLogText(), pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigLine());
 
       Chunk *next = pc->GetNext();
 
@@ -87,8 +87,8 @@ Chunk *scan_ib_line(Chunk *start)
             {
                LOG_FMT(LSIB, "%s(%d): Prepare the 'idx's\n", __func__, __LINE__);
             }
-            LOG_FMT(LSIB, "%s(%d):   New idx is %2.1zu, pc->GetColumn() is %2.1zu, Text() '%s', token_width is %zu, type is %s\n",
-                    __func__, __LINE__, idx, pc->GetColumn(), pc->Text(), token_width, get_token_name(pc->GetType()));
+            LOG_FMT(LSIB, "%s(%d):   New idx is %2.1zu, pc->GetColumn() is %2.1zu, text '%s', token_width is %zu, type is %s\n",
+                    __func__, __LINE__, idx, pc->GetColumn(), pc->GetLogText(), token_width, get_token_name(pc->GetType()));
             cpd.al[cpd.al_cnt].type = pc->GetType();
             cpd.al[cpd.al_cnt].col  = pc->GetColumn();
             cpd.al[cpd.al_cnt].len  = token_width;
@@ -130,7 +130,7 @@ Chunk *scan_ib_line(Chunk *start)
                else if (idx > 0)
                {
                   LOG_FMT(LSIB, "%s(%d): prev_match '%s', orig line is %zu, orig col is %zu\n",
-                          __func__, __LINE__, prev_match->Text(), prev_match->GetOrigLine(), prev_match->GetOrigCol());
+                          __func__, __LINE__, prev_match->GetLogText(), prev_match->GetOrigLine(), prev_match->GetOrigCol());
                   int min_col_diff = pc->GetColumn() - prev_match->GetColumn();
                   int cur_col_diff = cpd.al[idx].col - cpd.al[idx - 1].col;
 

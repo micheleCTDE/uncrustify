@@ -88,8 +88,8 @@ void combine_labels()
       }
       else
       {
-         LOG_FMT(LFCN, "%s(%d): next orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
-                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text(), get_token_name(next->GetType()));
+         LOG_FMT(LFCN, "%s(%d): next orig line is %zu, orig col is %zu, text '%s', type is %s\n",
+                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->GetLogText(), get_token_name(next->GetType()));
       }
       // this is a regression, have to be repaired latter
       // see also Issue #4081
@@ -214,12 +214,12 @@ void combine_labels()
          }
          else
          {
-            LOG_FMT(LFCN, "%s(%d): prev->Text() is '%s', orig line is %zu, orig col is %zu\n",
-                    __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol());
-            LOG_FMT(LFCN, "%s(%d): cur->Text() is '%s', orig line is %zu, orig col is %zu\n",
-                    __func__, __LINE__, cur->Text(), cur->GetOrigLine(), cur->GetOrigCol());
-            LOG_FMT(LFCN, "%s(%d): next->Text() is '%s', orig line is %zu, orig col is %zu\n",
-                    __func__, __LINE__, next->Text(), next->GetOrigLine(), next->GetOrigCol());
+            LOG_FMT(LFCN, "%s(%d): prev->text is '%s', orig line is %zu, orig col is %zu\n",
+                    __func__, __LINE__, prev->GetLogText(), prev->GetOrigLine(), prev->GetOrigCol());
+            LOG_FMT(LFCN, "%s(%d): cur->text is '%s', orig line is %zu, orig col is %zu\n",
+                    __func__, __LINE__, cur->GetLogText(), cur->GetOrigLine(), cur->GetOrigCol());
+            LOG_FMT(LFCN, "%s(%d): next->text is '%s', orig line is %zu, orig col is %zu\n",
+                    __func__, __LINE__, next->GetLogText(), next->GetOrigLine(), next->GetOrigCol());
             Chunk *nextprev = chunk_get_prev_local(next);   // Issue #2279
 
             if (nextprev->IsNullChunk())
@@ -281,7 +281,7 @@ void combine_labels()
                }
                LOG_FMT(LFCN, "%s(%d): orig line is %zu, orig col is %zu, tmp '%s': ",
                        __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(),
-                       (tmp->Is(CT_NEWLINE)) ? "<Newline>" : tmp->Text());
+                       (tmp->Is(CT_NEWLINE)) ? "<Newline>" : tmp->GetLogText());
                log_pcf_flags(LFCN, tmp->GetFlags());
 
                if (next->TestFlags(PCF_IN_FCN_CALL))
@@ -355,11 +355,11 @@ void combine_labels()
             }
             else if (nextprev->Is(CT_FPAREN_CLOSE))
             {
-               LOG_FMT(LFCN, "%s(%d): nextprev->Text() is '%s', orig line is %zu, orig col is %zu, type is %s\n",
-                       __func__, __LINE__, nextprev->Text(), nextprev->GetOrigLine(), nextprev->GetOrigCol(),
+               LOG_FMT(LFCN, "%s(%d): nextprev->text is '%s', orig line is %zu, orig col is %zu, type is %s\n",
+                       __func__, __LINE__, nextprev->GetLogText(), nextprev->GetOrigLine(), nextprev->GetOrigCol(),
                        get_token_name(nextprev->GetType()));
-               LOG_FMT(LFCN, "%s(%d): next->Text() is '%s', orig line is %zu, orig col is %zu, type is %s\n",
-                       __func__, __LINE__, next->Text(), next->GetOrigLine(), next->GetOrigCol(),
+               LOG_FMT(LFCN, "%s(%d): next->text is '%s', orig line is %zu, orig col is %zu, type is %s\n",
+                       __func__, __LINE__, next->GetLogText(), next->GetOrigLine(), next->GetOrigCol(),
                        get_token_name(next->GetType()));
 
                // Issue #2172
@@ -418,8 +418,8 @@ void combine_labels()
                //tmp = chunk_get_next_local(next);
                if (tmp->IsNotNullChunk())
                {
-                  LOG_FMT(LFCN, "%s(%d): tmp->Text() is '%s', orig line is %zu, orig col is %zu, type is %s\n",
-                          __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol(),
+                  LOG_FMT(LFCN, "%s(%d): tmp->text is '%s', orig line is %zu, orig col is %zu, type is %s\n",
+                          __func__, __LINE__, tmp->GetLogText(), tmp->GetOrigLine(), tmp->GetOrigCol(),
                           get_token_name(tmp->GetType()));
 
                   if (  tmp->Is(CT_BASE)

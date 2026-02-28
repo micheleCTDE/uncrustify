@@ -36,8 +36,8 @@ void newlines_functions_remove_extra_blank_lines()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+      LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
 
       if (  pc->IsNot(CT_BRACE_OPEN)
          || (  pc->GetParentType() != CT_FUNC_DEF
@@ -59,8 +59,8 @@ void newlines_functions_remove_extra_blank_lines()
          if (  !pc->Is(CT_COMMENT_MULTI)   // Issue #2195
             && pc->GetNlCount() > nl_max_blank_in_func)
          {
-            LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+            LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
             pc->SetNlCount(nl_max_blank_in_func);
             MARK_CHANGE();
             remove_next_newlines(pc);

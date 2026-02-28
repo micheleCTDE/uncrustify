@@ -126,7 +126,7 @@ static size_t fix_len_idx(size_t size, size_t idx, size_t len)
 
 UncText::UncText()
 {
-   m_logtext = log_type{ '\0' };
+   m_logText = log_type{ '\0' };
 }
 
 
@@ -162,7 +162,7 @@ UncText::UncText(const value_type &data, size_t idx, size_t len)
 
 size_t UncText::size() const
 {
-   return(m_chars.size());
+   return(m_unicodeText.size());
 }
 
 
@@ -224,31 +224,31 @@ UncText &UncText::operator+=(const char *ascii_text)
 
 const UncText::value_type &UncText::get() const
 {
-   return(m_chars);
+   return(m_unicodeText);
 }
 
 
 int UncText::operator[](size_t idx) const
 {
-   return((idx < m_chars.size()) ? m_chars[idx] : 0);
+   return((idx < m_unicodeText.size()) ? m_unicodeText[idx] : 0);
 }
 
 
 const int &UncText::at(size_t idx) const
 {
-   return(m_chars.at(idx));
+   return(m_unicodeText.at(idx));
 }
 
 
 int &UncText::at(size_t idx)
 {
-   return(m_chars.at(idx));
+   return(m_unicodeText.at(idx));
 }
 
 
 const int &UncText::back() const
 {
-   return(m_chars.back());
+   return(m_unicodeText.back());
 }
 
 
@@ -264,7 +264,7 @@ void UncText::pop_back()
    {
       return;
    }
-   m_chars.pop_back();
+   m_unicodeText.pop_back();
    update_logtext();
 }
 
@@ -275,7 +275,7 @@ void UncText::pop_front()
    {
       return;
    }
-   m_chars.pop_front();
+   m_unicodeText.pop_front();
    update_logtext();
 }
 
@@ -283,15 +283,15 @@ void UncText::pop_front()
 void UncText::update_logtext()
 {
    // make a pessimistic guess at the size
-   m_logtext.clear();
-   m_logtext.reserve(m_chars.size() * 3);
+   m_logText.clear();
+   m_logText.reserve(m_unicodeText.size() * 3);
 
-   for (int m_char : m_chars)
+   for (int m_char : m_unicodeText)
    {
-      toLogTextUtf8(m_char, m_logtext);
+      toLogTextUtf8(m_char, m_logText);
    }
 
-   m_logtext.push_back(0);
+   m_logText.push_back(0);
 }
 
 
@@ -305,7 +305,7 @@ int UncText::compare(const UncText &ref1, const UncText &ref2, size_t len, bool 
    for ( ; idx < max_idx; idx++)
    {
       // exactly the same character ?
-      if (ref1.m_chars[idx] == ref2.m_chars[idx])
+      if (ref1.m_unicodeText[idx] == ref2.m_unicodeText[idx])
       {
          continue;
       }
@@ -313,11 +313,11 @@ int UncText::compare(const UncText &ref1, const UncText &ref2, size_t len, bool 
 
       if (tcare)
       {
-         diff = ref1.m_chars[idx] - ref2.m_chars[idx];
+         diff = ref1.m_unicodeText[idx] - ref2.m_unicodeText[idx];
       }
       else
       {
-         diff = unc_tolower(ref1.m_chars[idx]) - unc_tolower(ref2.m_chars[idx]);
+         diff = unc_tolower(ref1.m_unicodeText[idx]) - unc_tolower(ref2.m_unicodeText[idx]);
       }
 
       if (diff == 0)
@@ -327,7 +327,7 @@ int UncText::compare(const UncText &ref1, const UncText &ref2, size_t len, bool 
           * we want to favor lower case before upper case (e.g. a before A)
           * so the order is the reverse of ASCII order (we negate).
           */
-         return(-(ref1.m_chars[idx] - ref2.m_chars[idx]));
+         return(-(ref1.m_unicodeText[idx] - ref2.m_unicodeText[idx]));
       }
       // return the case-insensitive diff to sort alphabetically
       return(diff);
@@ -353,7 +353,7 @@ bool UncText::equals(const UncText &ref) const
 
    for (size_t idx = 0; idx < len; idx++)
    {
-      if (m_chars[idx] != ref.m_chars[idx])
+      if (m_unicodeText[idx] != ref.m_unicodeText[idx])
       {
          return(false);
       }
@@ -363,28 +363,28 @@ bool UncText::equals(const UncText &ref) const
 }
 
 
-const char *UncText::c_str() const
+const char *UncText::GetLogText() const
 {
-   return(reinterpret_cast<const char *>(&m_logtext[0]));
+   return(reinterpret_cast<const char *>(&m_logText[0]));
 }
 
 
 void UncText::set(int ch)
 {
-   m_logtext.clear();
-   toLogTextUtf8(ch, m_logtext);
-   m_logtext.push_back('\0');
+   m_logText.clear();
+   toLogTextUtf8(ch, m_logText);
+   m_logText.push_back('\0');
 
 
-   m_chars.clear();
-   m_chars.push_back(ch);
+   m_unicodeText.clear();
+   m_unicodeText.push_back(ch);
 }
 
 
 void UncText::set(const UncText &ref)
 {
-   m_chars   = ref.m_chars;
-   m_logtext = ref.m_logtext;
+   m_unicodeText = ref.m_unicodeText;
+   m_logText     = ref.m_logText;
 }
 
 
@@ -394,11 +394,11 @@ void UncText::set(const UncText &ref, size_t idx, size_t len)
 
    if (len == ref_size)
    {
-      m_chars = ref.m_chars;
+      m_unicodeText = ref.m_unicodeText;
       update_logtext();
       return;
    }
-   m_chars.resize(len);
+   m_unicodeText.resize(len);
 
    len = fix_len_idx(ref_size, idx, len);
 
@@ -406,7 +406,7 @@ void UncText::set(const UncText &ref, size_t idx, size_t len)
         len > 0;
         di++, idx++, len--)
    {
-      m_chars[di] = ref.m_chars[idx];
+      m_unicodeText[di] = ref.m_unicodeText[idx];
    }
 
    update_logtext();
@@ -417,11 +417,11 @@ void UncText::set(const string &ascii_text)
 {
    const size_t len = ascii_text.size();
 
-   m_chars.resize(len);
+   m_unicodeText.resize(len);
 
    for (size_t idx = 0; idx < len; idx++)
    {
-      m_chars[idx] = ascii_text[idx];
+      m_unicodeText[idx] = ascii_text[idx];
    }
 
    update_logtext();
@@ -432,11 +432,11 @@ void UncText::set(const char *ascii_text)
 {
    const size_t len = strlen(ascii_text);
 
-   m_chars.resize(len);
+   m_unicodeText.resize(len);
 
    for (size_t idx = 0; idx < len; idx++)
    {
-      m_chars[idx] = *ascii_text++;
+      m_unicodeText[idx] = *ascii_text++;
    }
 
    update_logtext();
@@ -445,7 +445,7 @@ void UncText::set(const char *ascii_text)
 
 void UncText::set(const value_type &data, size_t idx, size_t len)
 {
-   m_chars.resize(len);
+   m_unicodeText.resize(len);
 
    len = fix_len_idx(data.size(), idx, len);
 
@@ -453,7 +453,7 @@ void UncText::set(const value_type &data, size_t idx, size_t len)
         len > 0;
         di++, idx++, len--)
    {
-      m_chars[di] = data[idx];
+      m_unicodeText[di] = data[idx];
    }
 
    update_logtext();
@@ -466,29 +466,29 @@ void UncText::resize(size_t new_size)
    {
       return;
    }
-   const auto log_new_size = getLogTextUtf8Len(m_chars, new_size);
+   const auto log_new_size = getLogTextUtf8Len(m_unicodeText, new_size);
 
-   m_logtext.resize(log_new_size + 1); // one extra for \0
-   m_logtext[log_new_size] = '\0';
+   m_logText.resize(log_new_size + 1); // one extra for \0
+   m_logText[log_new_size] = '\0';
 
 
-   m_chars.resize(new_size);
+   m_unicodeText.resize(new_size);
 }
 
 
 void UncText::clear()
 {
-   m_logtext.clear();
-   m_logtext.push_back('\0');
+   m_logText.clear();
+   m_logText.push_back('\0');
 
 
-   m_chars.clear();
+   m_unicodeText.clear();
 }
 
 
 void UncText::insert(size_t idx, int ch)
 {
-   if (idx >= m_chars.size())
+   if (idx >= m_unicodeText.size())
    {
       throw out_of_range(string(__func__) + ":" + to_string(__LINE__)
                          + " - idx >= m_chars.size()");
@@ -498,15 +498,15 @@ void UncText::insert(size_t idx, int ch)
    utf8converted.reserve(UTF8_BLOCKS);
    toLogTextUtf8(ch, utf8converted);
 
-   const auto utf8_idx = getLogTextUtf8Len(m_chars, idx);
+   const auto utf8_idx = getLogTextUtf8Len(m_unicodeText, idx);
 
-   m_logtext.pop_back(); // remove '\0'
-   m_logtext.insert(std::next(std::begin(m_logtext), utf8_idx),
+   m_logText.pop_back(); // remove '\0'
+   m_logText.insert(std::next(std::begin(m_logText), utf8_idx),
                     std::begin(utf8converted), std::end(utf8converted));
-   m_logtext.push_back('\0');
+   m_logText.push_back('\0');
 
 
-   m_chars.insert(std::next(std::begin(m_chars), idx), ch);
+   m_unicodeText.insert(std::next(std::begin(m_unicodeText), idx), ch);
 }
 
 
@@ -517,35 +517,35 @@ void UncText::insert(size_t idx, const UncText &ref)
       return;
    }
 
-   if (idx >= m_chars.size())
+   if (idx >= m_unicodeText.size())
    {
       throw out_of_range(string(__func__) + ":" + to_string(__LINE__)
                          + " - idx >= m_chars.size()");
    }
-   const auto utf8_idx = getLogTextUtf8Len(m_chars, idx);
+   const auto utf8_idx = getLogTextUtf8Len(m_unicodeText, idx);
 
    // (A+B) remove \0 from both containers, add back a single at the end
-   m_logtext.pop_back(); // A
-   m_logtext.insert(std::next(std::begin(m_logtext), utf8_idx),
-                    std::begin(ref.m_logtext),
-                    std::prev(std::end(ref.m_logtext))); // B
-   m_logtext.push_back('\0');
+   m_logText.pop_back(); // A
+   m_logText.insert(std::next(std::begin(m_logText), utf8_idx),
+                    std::begin(ref.m_logText),
+                    std::prev(std::end(ref.m_logText))); // B
+   m_logText.push_back('\0');
 
 
-   m_chars.insert(std::next(std::begin(m_chars), idx),
-                  std::begin(ref.m_chars), std::end(ref.m_chars));
+   m_unicodeText.insert(std::next(std::begin(m_unicodeText), idx),
+                        std::begin(ref.m_unicodeText), std::end(ref.m_unicodeText));
 }
 
 
 void UncText::append(int ch)
 {
-   m_logtext.pop_back();
+   m_logText.pop_back();
 
    if (  ch < 0x80
       && ch != '\n'
       && ch != '\r')
    {
-      m_logtext.push_back(ch);
+      m_logText.push_back(ch);
    }
    else
    {
@@ -553,13 +553,13 @@ void UncText::append(int ch)
       utf8converted.reserve(UTF8_BLOCKS);
       toLogTextUtf8(ch, utf8converted);
 
-      m_logtext.insert(std::end(m_logtext),
+      m_logText.insert(std::end(m_logText),
                        std::begin(utf8converted), std::end(utf8converted));
    }
-   m_logtext.push_back('\0');
+   m_logText.push_back('\0');
 
 
-   m_chars.push_back(ch);
+   m_unicodeText.push_back(ch);
 }
 
 
@@ -569,11 +569,11 @@ void UncText::append(const UncText &ref)
    {
       return;
    }
-   m_logtext.pop_back();
-   m_logtext.insert(std::end(m_logtext),
-                    std::begin(ref.m_logtext), std::end(ref.m_logtext));
+   m_logText.pop_back();
+   m_logText.insert(std::end(m_logText),
+                    std::begin(ref.m_logText), std::end(ref.m_logText));
 
-   m_chars.insert(m_chars.end(), ref.m_chars.begin(), ref.m_chars.end());
+   m_unicodeText.insert(m_unicodeText.end(), ref.m_unicodeText.begin(), ref.m_unicodeText.end());
 }
 
 
@@ -610,7 +610,7 @@ bool UncText::startswith(const char *text, size_t idx) const
          && *text);
          idx++, text++)
    {
-      if (*text != m_chars[idx])
+      if (*text != m_unicodeText[idx])
       {
          return(false);
       }
@@ -631,7 +631,7 @@ bool UncText::startswith(const UncText &text, size_t idx) const
          && si < text.size());
          idx++, si++)
    {
-      if (text.m_chars[si] != m_chars[idx])
+      if (text.m_unicodeText[si] != m_unicodeText[idx])
       {
          return(false);
       }
@@ -660,7 +660,7 @@ int UncText::find(const char *search_txt, size_t start_idx) const
 
       for (size_t ii = 0; ii < t_len; ii++)
       {
-         if (m_chars[idx + ii] != search_txt[ii])
+         if (m_unicodeText[idx + ii] != search_txt[ii])
          {
             match = false;
             break;
@@ -700,7 +700,7 @@ int UncText::rfind(const char *search_txt, size_t start_idx) const
 
       for (size_t ii = 0; ii < t_len; ii++)
       {
-         if (m_chars[idx + ii] != search_txt[ii])
+         if (m_unicodeText[idx + ii] != search_txt[ii])
          {
             match = false;
             break;
@@ -725,22 +725,22 @@ void UncText::erase(size_t start_idx, size_t len)
    }
    const size_t end_idx = start_idx + len - 1;
 
-   if (end_idx >= m_chars.size())
+   if (end_idx >= m_unicodeText.size())
    {
       throw out_of_range(string(__func__) + ":" + to_string(__LINE__)
                          + " - idx + len >= m_chars.size()");
    }
-   const auto pos_s = getLogTextUtf8Len(m_chars, start_idx);
-   const auto pos_e = pos_s + getLogTextUtf8Len(m_chars, start_idx, end_idx);
+   const auto pos_s = getLogTextUtf8Len(m_unicodeText, start_idx);
+   const auto pos_e = pos_s + getLogTextUtf8Len(m_unicodeText, start_idx, end_idx);
 
-   m_logtext.pop_back();
-   m_logtext.erase(std::next(std::begin(m_logtext), pos_s),
-                   std::next(std::begin(m_logtext), pos_e + 1));
-   m_logtext.push_back('\0');
+   m_logText.pop_back();
+   m_logText.erase(std::next(std::begin(m_logText), pos_s),
+                   std::next(std::begin(m_logText), pos_e + 1));
+   m_logText.push_back('\0');
 
 
-   m_chars.erase(std::next(std::begin(m_chars), start_idx),
-                 std::next(std::begin(m_chars), end_idx + 1));
+   m_unicodeText.erase(std::next(std::begin(m_unicodeText), start_idx),
+                       std::next(std::begin(m_unicodeText), end_idx + 1));
 }
 
 
@@ -757,7 +757,7 @@ int UncText::replace(const char *search_text, const UncText &replace_text)
       rcnt++;
       erase(static_cast<size_t>(fidx), s_len);
 
-      (static_cast<size_t>(fidx) >= m_chars.size())
+      (static_cast<size_t>(fidx) >= m_unicodeText.size())
       ? append(replace_text)
       : insert(static_cast<size_t>(fidx), replace_text);
 

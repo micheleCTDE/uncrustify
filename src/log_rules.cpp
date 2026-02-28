@@ -19,11 +19,11 @@ void log_rule2(const char *func, size_t line, const char *rule, Chunk *first, Ch
 
    if (second->IsNot(CT_NEWLINE))
    {
-      LOG_FMT(LSPACE, "%s(%zu): first orig line is %zu, orig col is %zu, Text() is '%s', [%s/%s] <===>\n",
-              func, line, first->GetOrigLine(), first->GetOrigCol(), first->Text(),
+      LOG_FMT(LSPACE, "%s(%zu): first orig line is %zu, orig col is %zu, text is '%s', [%s/%s] <===>\n",
+              func, line, first->GetOrigLine(), first->GetOrigCol(), first->GetLogText(),
               get_token_name(first->GetType()), get_token_name(first->GetParentType()));
-      LOG_FMT(LSPACE, "           second orig line is %zu, orig col is %zu, Text() is '%s', [%s/%s] :",
-              second->GetOrigLine(), second->GetOrigCol(), second->Text(),
+      LOG_FMT(LSPACE, "           second orig line is %zu, orig col is %zu, text is '%s', [%s/%s] :",
+              second->GetOrigLine(), second->GetOrigCol(), second->GetLogText(),
               get_token_name(second->GetType()), get_token_name(second->GetParentType()));
       LOG_FMT(LSPACE, " rule %s[line %zu]\n",
               rule, line);
@@ -84,7 +84,7 @@ void log_rule4(const char *rule, Chunk *first)
    size_t sizeOfTrack = first->GetTrackingData()->size();
 
    LOG_FMT(LSPACE, "log_rule4(%d): rule is '%s', after '%s', at line %zu, tracking number is %zu, size is %zu\n",
-           __LINE__, rule, first->Text(), first->GetOrigLine(), a_number, sizeOfTrack);
+           __LINE__, rule, first->GetLogText(), first->GetOrigLine(), a_number, sizeOfTrack);
 } // void log_rule4
 
 
@@ -118,7 +118,7 @@ void log_ruleStart(const char *rule, Chunk *first)
    size_t sizeOfTrack = first->GetTrackingData()->size();
 
    LOG_FMT(LSPACE, "log_ruleStart(%d): rule is '%s', '%s', at line %zu, tracking number is %zu, size is %zu\n",
-           __LINE__, rule, first->Text(), first->GetOrigLine(), a_number, sizeOfTrack);
+           __LINE__, rule, first->GetLogText(), first->GetOrigLine(), a_number, sizeOfTrack);
 } // log_ruleStart
 
 
@@ -152,5 +152,5 @@ void log_ruleNL(const char *rule, Chunk *pc)
    size_t sizeOfTrack = pc->GetTrackingData()->size();
 
    LOG_FMT(LSPACE, "log_ruleNL(%d): rule is '%s', after '%s', at line %zu, tracking number is %zu, size is %zu\n",
-           __LINE__, rule, pc->Text(), pc->GetOrigLine(), a_number, sizeOfTrack);
+           __LINE__, rule, pc->GetLogText(), pc->GetOrigLine(), a_number, sizeOfTrack);
 } // void log_ruleNL

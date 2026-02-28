@@ -30,7 +30,7 @@ void double_newline(Chunk *nl)
    }
    else
    {
-      LOG_FMT(LNEWLINE, "'%s' \n", prev->Text());
+      LOG_FMT(LNEWLINE, "'%s' \n", prev->GetLogText());
    }
    LOG_FMT(LNEWLINE, "on line %zu", prev->GetOrigLine());
 

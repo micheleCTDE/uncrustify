@@ -28,9 +28,9 @@ bool do_it_newlines_func_pre_blank_lines(Chunk *last_nl, E_Token start_type)
    {
       return(false);
    }
-   LOG_FMT(LNLFUNCT, "%s(%d): orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
+   LOG_FMT(LNLFUNCT, "%s(%d): orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
            __func__, __LINE__,
-           last_nl->GetOrigLine(), last_nl->GetOrigCol(), get_token_name(last_nl->GetType()), last_nl->Text());
+           last_nl->GetOrigLine(), last_nl->GetOrigCol(), get_token_name(last_nl->GetType()), last_nl->GetLogText());
 
    switch (start_type)
    {

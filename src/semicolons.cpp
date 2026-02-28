@@ -50,7 +50,7 @@ void remove_extra_semicolons()
       {
          LOG_FMT(LSCANSEMI, "%s(%d): Semi orig line is %zu, orig col is %zu, parent is %s, prev = '%s' [%s/%s]\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetParentType()),
-                 prev->Text(),
+                 prev->GetLogText(),
                  get_token_name(prev->GetType()), get_token_name(prev->GetParentType()));
 
          if (pc->GetParentType() == CT_TYPEDEF)

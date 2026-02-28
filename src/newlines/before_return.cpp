@@ -70,6 +70,6 @@ void newline_before_return(Chunk *start)
       nl->SetNlCount(nl->GetNlCount() + 1);
       MARK_CHANGE();
       LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', new line count is now %zu\n",
-              __func__, __LINE__, nl->GetOrigLine(), nl->GetOrigCol(), nl->Text(), nl->GetNlCount());
+              __func__, __LINE__, nl->GetOrigLine(), nl->GetOrigCol(), nl->GetLogText(), nl->GetNlCount());
    }
 } // newline_before_return

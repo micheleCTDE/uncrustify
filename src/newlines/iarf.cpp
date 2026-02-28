@@ -64,7 +64,7 @@ void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check_nl_ass
       }
       Chunk *nl = newline_add_between(before, after);
       LOG_FMT(LNEWLINE, "%s(%d): newline_add_between '%s' and '%s'\n",
-              __func__, __LINE__, before->Text(), after->Text());
+              __func__, __LINE__, before->GetLogText(), after->GetLogText());
 
       if (  nl->IsNotNullChunk()
          && av == IARF_FORCE
@@ -76,7 +76,7 @@ void newline_iarf_pair(Chunk *before, Chunk *after, iarf_e av, bool check_nl_ass
    else if (av & IARF_REMOVE)
    {
       LOG_FMT(LNEWLINE, "%s(%d): newline_remove_between '%s' and '%s'\n",
-              __func__, __LINE__, before->Text(), after->Text());
+              __func__, __LINE__, before->GetLogText(), after->GetLogText());
       newline_del_between(before, after);
    }
 } // newline_iarf_pair

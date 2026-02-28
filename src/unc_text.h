@@ -116,7 +116,7 @@ public:
 
 
    //! Returns the UTF-8 string for logging
-   const char *c_str() const;
+   const char *GetLogText() const;
 
 
    /**
@@ -188,8 +188,8 @@ public:
 protected:
    void update_logtext();
 
-   value_type m_chars;           //! this contains the non-encoded 31-bit chars
-   log_type   m_logtext;         //! logging text, utf8 encoded - updated in c_str()
+   value_type m_unicodeText;     //! unicode text
+   log_type   m_logText;         //! text for logging purposes, utf8 encoded
 };
 
 #endif /* UNC_TEXT_H_INCLUDED */

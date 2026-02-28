@@ -48,7 +48,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
 
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LALASS, "%s(%d): orig line is %zu, check pc->Text() is '%s', type is %s, parent type is %s\n",
+      LOG_FMT(LALASS, "%s(%d): orig line is %zu, check text is '%s', type is %s, parent type is %s\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->ElidedText(copy), get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       // Don't check inside SPAREN, PAREN or SQUARE groups
@@ -145,7 +145,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
          if (var_def_cnt != 0)
          {
             LOG_FMT(LALASS, "%s(%d)OK: vdas.Add on '%s' on orig line %zu, orig col is %zu\n",
-                    __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+                    __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
             vdas.Add(pc);
          }
       }
@@ -156,7 +156,7 @@ Chunk *align_braced_init_list(Chunk *first, size_t span, size_t thresh, size_t *
    if (pc->IsNotNullChunk())
    {
       LOG_FMT(LALASS, "%s(%d): done on '%s' on orig line %zu\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine());
+              __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine());
    }
    else
    {

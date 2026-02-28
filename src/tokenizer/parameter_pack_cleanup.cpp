@@ -46,7 +46,7 @@ void parameter_pack_cleanup()
                      break;
                   }
 
-                  if (strcmp(pc->Text(), parameter_pack->Text()) == 0)
+                  if (strcmp(pc->GetLogText(), parameter_pack->GetLogText()) == 0)
                   {
                      pc->SetType(CT_PARAMETER_PACK);
                   }

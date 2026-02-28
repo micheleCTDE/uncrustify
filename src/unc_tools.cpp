@@ -116,7 +116,7 @@ void prot_the_line_pc(Chunk *pc_sub, const char *func_name, int theLine_of_code,
             }
             else
             {
-               LOG_FMT(LGUY, "Text() '%s', ", pc->Text());
+               LOG_FMT(LGUY, "text '%s', ", pc->GetLogText());
             }
             LOG_FMT(LGUY, " column is %zu, pp level is %zu, type is %s, parent type is %s, orig col is %zu,",
                     pc->GetColumn(), pc->GetPpLevel(), get_token_name(pc->GetType()),
@@ -280,7 +280,7 @@ void rebuild_the_line(int theLine_of_code, size_t the_line_to_be_prot, bool incr
          {
             size_t     col  = pc->GetColumn();
             size_t     len1 = pc->Len();
-            const char *A   = pc->Text();
+            const char *A   = pc->GetLogText();
 
             for (size_t x = 0; x < len1; x++)
             {
@@ -364,7 +364,7 @@ void prot_some_lines(const char *func_name, int theLine_of_code, size_t from_lin
          }
          else
          {
-            LOG_FMT(LGUY, "Text() '%s', ", pc->Text());
+            LOG_FMT(LGUY, "text '%s', ", pc->GetLogText());
          }
          LOG_FMT(LGUY, " column is %zu, pp level is %zu, type is %s, parent type is %s, orig col is %zu,",
                  pc->GetColumn(), pc->GetPpLevel(), get_token_name(pc->GetType()),
@@ -445,7 +445,7 @@ void prot_all_lines(const char *func_name, int theLine_of_code)
       }
       else
       {
-         LOG_FMT(LGUY, "Text() '%s', ", pc->Text());
+         LOG_FMT(LGUY, "text '%s', ", pc->GetLogText());
       }
       LOG_FMT(LGUY, " column is %zu, type is %s\n",
               pc->GetColumn(), get_token_name(pc->GetType()));
@@ -480,7 +480,7 @@ void examine_Data(const char *func_name, int theLine_of_code, int what)
          {
             LOG_FMT(LGUY, "\n");
             LOG_FMT(LGUY, "1:(%d),", theLine_of_code);
-            LOG_FMT(LGUY, "%s, orig col=%zu, orig col end=%zu\n", pc->Text(), pc->GetOrigCol(), pc->GetOrigColEnd());
+            LOG_FMT(LGUY, "%s, orig col=%zu, orig col end=%zu\n", pc->GetLogText(), pc->GetOrigCol(), pc->GetOrigColEnd());
          }
       }
 
@@ -499,7 +499,7 @@ void examine_Data(const char *func_name, int theLine_of_code, int what)
             }
             else
             {
-               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->GetColumn());
+               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->GetLogText(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->GetColumn());
             }
          }
       }
@@ -517,7 +517,7 @@ void examine_Data(const char *func_name, int theLine_of_code, int what)
          }
          else
          {
-            LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->GetColumn());
+            LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->GetLogText(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->GetColumn());
          }
       }
 
@@ -536,7 +536,7 @@ void examine_Data(const char *func_name, int theLine_of_code, int what)
             }
             else
             {
-               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->Text(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->GetColumn());
+               LOG_FMT(LGUY, "(%zu)%s %s, col=%zu, column=%zu\n", pc->GetOrigLine(), pc->GetLogText(), get_token_name(pc->GetType()), pc->GetOrigCol(), pc->GetColumn());
             }
          }
       }
@@ -615,7 +615,7 @@ void dump_out(size_t type)
 
          if (pc->IsNot(CT_NEWLINE))
          {
-            fprintf(D_file, "  Text %s\n", pc->Text());
+            fprintf(D_file, "  text %s\n", pc->GetLogText());
          }
       }
 
@@ -709,7 +709,7 @@ void dump_in(size_t type)
             {
                if (chunk.GetType() != CT_NEWLINE)
                {
-                  chunk.Str() = parts[1];
+                  chunk.Text() = parts[1];
                }
             }
             else
@@ -841,7 +841,7 @@ void examine_token(const char *func_name, int theLine_of_code, size_t orig_line_
    {
       //LOG_FMT(LGUY, "orig line is %zu, ", pc->GetOrigLine());
       //LOG_FMT(LGUY, "orig column is %zu, ", pc->GetOrigCol());
-      //LOG_FMT(LGUY, "Text is '%s'\n", pc->Text());
+      //LOG_FMT(LGUY, "text is '%s'\n", pc->GetLogText());
 
       if (!line_found)
       {
@@ -861,7 +861,7 @@ void examine_token(const char *func_name, int theLine_of_code, size_t orig_line_
       {
          //LOG_FMT(LGUY, "orig line is %zu, ", pc->GetOrigLine());
          //LOG_FMT(LGUY, "orig column is %zu, ", pc->GetOrigCol());
-         //LOG_FMT(LGUY, "Text is '%s'\n", pc->Text());
+         //LOG_FMT(LGUY, "text is '%s'\n", pc->GetLogText());
          if (!column_found)
          {
             if (pc->GetOrigCol() == orig_column_to_examine)

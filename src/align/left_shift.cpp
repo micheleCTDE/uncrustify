@@ -39,7 +39,7 @@ void align_left_shift()
       else
       {
          char copy[1000];
-         LOG_FMT(LALIGN, "%s(%d): orig line is %zu, orig col is %zu, pc->Text() '%s'\n",
+         LOG_FMT(LALIGN, "%s(%d): orig line is %zu, orig col is %zu, text '%s'\n",
                  __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy));
       }
 

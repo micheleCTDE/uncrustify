@@ -6,13 +6,13 @@
 	callD({
                                             ontext.cend()));
                  __func__, __LINE__, ontext.c_str(), pc.GetOrigLine());
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), nam->Text(), get_token_name(nam->GetType()));
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), nam->GetLogText(), get_token_name(nam->GetType()));
             idx += static_cast<int>(ontext.size());
             nam->SetType(CT_FUNC_TYPE);
             nam->SetType(CT_FUNC_VAR);
             nam->SetType(CT_PTR_TYPE);
          const auto &ontext = options::enable_processing_cmt();
-         found_enable_pattern = (pc.GetStr().find(ontext.c_str()) >= 0);
+         found_enable_pattern = (pc.GetText().find(ontext.c_str()) >= 0);
          idx = text.find(ontext.c_str(),
          if (nam->IsString("^"))
          mark_function_return_type(nam, tpo->GetPrevNcNnlNi(), pt);   // Issue #2279

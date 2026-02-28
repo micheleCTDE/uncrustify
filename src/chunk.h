@@ -126,27 +126,27 @@ public:
    IndentationData &IndentData();
 
    /**
-    * @brief Returns the text data of the chunk as a const reference
+    * @brief Returns the text of the chunk as a const reference
     */
-   const UncText &GetStr() const;
+   const UncText &GetText() const;
 
    /**
-    * @brief Returns the text data of the chunk as a modifiable reference
+    * @brief Returns the text of the chunk as a modifiable reference
     */
-   UncText &Str();
+   UncText &Text();
 
    /**
-    * @brief returns the number of characters in the chunk text	string
+    * @brief returns the number of characters in the chunk text string
     */
    size_t Len() const;
 
    /**
     * @brief returns the content of the chunk text as C string
     */
-   const char *Text() const;
+   const char *GetLogText() const;
 
    /**
-    * Returns a filled up (if necessary) copy of the first chars of the Text() string
+    * Returns a filled up (if necessary) copy of the first chars of the text string
     */
    const char *ElidedText(char *for_the_copy) const;
 
@@ -1080,7 +1080,7 @@ protected:
    Chunk           *m_prev;                 //! pointer to previous chunk in list
    Chunk           *m_parent;               //! pointer to parent chunk (not always set)
 
-   UncText         m_str;                   //! the token text
+   UncText         m_text;                  //! the token text
    TrackList       *m_trackingList;         //! for debugging purpose only
 
 
@@ -1120,13 +1120,13 @@ inline Chunk &Chunk::operator=(const Chunk &o)
 
 inline size_t Chunk::Len() const
 {
-   return(m_str.size());
+   return(m_text.size());
 }
 
 
-inline const char *Chunk::Text() const
+inline const char *Chunk::GetLogText() const
 {
-   return(m_str.c_str());
+   return(m_text.GetLogText());
 }
 
 
@@ -1169,15 +1169,15 @@ inline IndentationData &Chunk::IndentData()
 }
 
 
-inline const UncText &Chunk::GetStr() const
+inline const UncText &Chunk::GetText() const
 {
-   return(m_str);
+   return(m_text);
 }
 
 
-inline UncText &Chunk::Str()
+inline UncText &Chunk::Text()
 {
-   return(m_str);
+   return(m_text);
 }
 
 
@@ -1752,7 +1752,7 @@ inline bool Chunk::IsVBrace() const
 inline bool Chunk::IsStar() const
 {
    return(  Len() == 1
-         && m_str[0] == '*'
+         && m_text[0] == '*'
          && IsNot(CT_OPERATOR_VAL));
 }
 
@@ -1767,7 +1767,7 @@ inline bool Chunk::IsSemicolon() const
 inline bool Chunk::IsWord() const
 {
    return(  Len() >= 1
-         && CharTable::IsKw1(m_str[0]));
+         && CharTable::IsKw1(m_text[0]));
 }
 
 
@@ -1776,7 +1776,7 @@ inline bool Chunk::IsNullable() const
    return(  (  language_is_set(lang_flag_e::LANG_CS)
             || language_is_set(lang_flag_e::LANG_VALA))
          && Len() == 1
-         && m_str[0] == '?');
+         && m_text[0] == '?');
 }
 
 
@@ -1784,7 +1784,7 @@ inline bool Chunk::IsMsRef() const
 {
    return(  language_is_set(lang_flag_e::LANG_CPP)
          && Len() == 1
-         && m_str[0] == '^'
+         && m_text[0] == '^'
          && IsNot(CT_OPERATOR_VAL));
 }
 

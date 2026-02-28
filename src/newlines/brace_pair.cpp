@@ -107,8 +107,8 @@ void newlines_brace_pair(Chunk *br_open)
                && !tmp->IsBraceClose()
                && (tmp->GetNext()->IsNotNullChunk()))
          {
-            LOG_FMT(LNL1LINE, "%s(%d): tmp orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(), tmp->Text());
+            LOG_FMT(LNL1LINE, "%s(%d): tmp orig line is %zu, orig col is %zu, text is '%s'\n",
+                    __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(), tmp->GetLogText());
 
             if (tmp->IsComment())
             {
@@ -134,8 +134,8 @@ void newlines_brace_pair(Chunk *br_open)
 
                while (current->IsNotNullChunk())
                {
-                  LOG_FMT(LNL1LINE, "%s(%d): zu  kopieren: current orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                          __func__, __LINE__, current->GetOrigLine(), current->GetOrigCol(), current->Text());
+                  LOG_FMT(LNL1LINE, "%s(%d): zu  kopieren: current orig line is %zu, orig col is %zu, text is '%s'\n",
+                          __func__, __LINE__, current->GetOrigLine(), current->GetOrigCol(), current->GetLogText());
                   saved_chunk.push_back(*current);
                   Chunk *the_next = current->GetNext();
 
@@ -154,8 +154,8 @@ void newlines_brace_pair(Chunk *br_open)
                   && !tmp_1->IsBraceClose()
                   && (tmp_1->GetNext()->IsNotNullChunk()))
             {
-               LOG_FMT(LNL1LINE, "%s(%d): tmp_1 orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                       __func__, __LINE__, tmp_1->GetOrigLine(), tmp_1->GetOrigCol(), tmp_1->Text());
+               LOG_FMT(LNL1LINE, "%s(%d): tmp_1 orig line is %zu, orig col is %zu, text is '%s'\n",
+                       __func__, __LINE__, tmp_1->GetOrigLine(), tmp_1->GetOrigCol(), tmp_1->GetLogText());
 
                if (tmp_1->IsNewline())
                {
@@ -194,7 +194,7 @@ void newlines_brace_pair(Chunk *br_open)
                      chunk.SetNlCount(1);
                      chunk.CopyAndAddBefore(current);
                      LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
-                             __func__, __LINE__, current->GetOrigLine(), current->GetOrigCol(), current->Text());
+                             __func__, __LINE__, current->GetOrigLine(), current->GetOrigCol(), current->GetLogText());
                   }
                   else
                   {
@@ -283,8 +283,8 @@ void newlines_brace_pair(Chunk *br_open)
    Chunk *next = br_open->GetNextNc();
 
    // Insert a newline between the '=' and open brace, if needed
-   LOG_FMT(LNL1LINE, "%s(%d): br_open->Text() '%s', br_open->GetType() [%s], br_open->GetParentType() [%s]\n",
-           __func__, __LINE__, br_open->Text(), get_token_name(br_open->GetType()),
+   LOG_FMT(LNL1LINE, "%s(%d): br_open->text '%s', br_open->GetType() [%s], br_open->GetParentType() [%s]\n",
+           __func__, __LINE__, br_open->GetLogText(), get_token_name(br_open->GetType()),
            get_token_name(br_open->GetParentType()));
 
    if (br_open->GetParentType() == CT_ASSIGN)

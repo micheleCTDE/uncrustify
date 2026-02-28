@@ -48,12 +48,12 @@ void annotations_newlines()
          break;
       }
       LOG_FMT(LANNOT, "%s(%d): orig line is %zu, orig col is %zu, annotation is '%s',  end @ orig line %zu, orig col %zu, is '%s'\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
-              ae->GetOrigLine(), ae->GetOrigCol(), ae->Text());
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(),
+              ae->GetOrigLine(), ae->GetOrigCol(), ae->GetLogText());
 
       prev = ae->GetPrev();             // Issue #1845
-      LOG_FMT(LANNOT, "%s(%d): prev orig line is %zu, orig col is %zu, Text() is '%s'\n",
-              __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->Text());
+      LOG_FMT(LANNOT, "%s(%d): prev orig line is %zu, orig col is %zu, text is '%s'\n",
+              __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->GetLogText());
       next = ae->GetNextNnl();
 
       if (next->Is(CT_ANNOTATION))

@@ -57,12 +57,12 @@ void check_double_brace_init(Chunk *bo1)
          {
             LOG_FMT(LJDBI, " - end, orig line is %zu, orig col is %zu\n", bc2->GetOrigLine(), bc2->GetOrigCol());
             // delete bo2 and bc1
-            bo1->Str() += bo2->GetStr();
+            bo1->Text() += bo2->GetText();
             bo1->SetOrigColEnd(bo2->GetOrigColEnd());
             Chunk::Delete(bo2);
             bo1->SetParentType(CT_DOUBLE_BRACE);
 
-            bc2->Str() += bc1->GetStr();
+            bc2->Text() += bc1->GetText();
             bc2->SetOrigColEnd(bc1->GetOrigColEnd());
             Chunk::Delete(bc1);
             bc2->SetParentType(CT_DOUBLE_BRACE);
