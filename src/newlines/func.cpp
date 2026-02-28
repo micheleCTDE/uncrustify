@@ -29,8 +29,8 @@ void newline_func_def_or_call(Chunk *start)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LNFD, "%s(%d): called on start->Text() is '%s', orig line is %zu, orig col is %zu, [%s/%s]\n",
-           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetOrigCol(),
+   LOG_FMT(LNFD, "%s(%d): called on start->text is '%s', orig line is %zu, orig col is %zu, [%s/%s]\n",
+           __func__, __LINE__, start->GetLogText(), start->GetOrigLine(), start->GetOrigCol(),
            get_token_name(start->GetType()), get_token_name(start->GetParentType()));
 
    bool is_def = (start->GetParentType() == CT_FUNC_DEF)
@@ -184,8 +184,8 @@ void newline_func_def_or_call(Chunk *start)
             if (  (a != IARF_IGNORE)
                && prev->IsNotNullChunk())
             {
-               LOG_FMT(LNFD, "%s(%d): prev->Text() '%s', orig line is %zu, orig col is %zu, [%s/%s]\n",
-                       __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol(),
+               LOG_FMT(LNFD, "%s(%d): prev->text '%s', orig line is %zu, orig col is %zu, [%s/%s]\n",
+                       __func__, __LINE__, prev->GetLogText(), prev->GetOrigLine(), prev->GetOrigCol(),
                        get_token_name(prev->GetType()),
                        get_token_name(prev->GetParentType()));
 
@@ -350,7 +350,7 @@ void newline_func_multi_line(Chunk *start)
 
    LOG_FMT(LNFD, "%s(%d): called on %zu:%zu '%s' [%s/%s]\n",
            __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol(),
-           start->Text(), get_token_name(start->GetType()), get_token_name(start->GetParentType()));
+           start->GetLogText(), get_token_name(start->GetType()), get_token_name(start->GetParentType()));
 
    bool add_start;
    bool add_args;

@@ -112,7 +112,7 @@ void align_init_brace(Chunk *start)
                     __func__, __LINE__, idx, cpd.al[idx].col);
             LOG_FMT(LALBR, "%s(%d): (idx is %zu) check %s vs %s -- [%s] to col %zu\n",
                     __func__, __LINE__,
-                    idx, get_token_name(pc->GetType()), get_token_name(cpd.al[idx].type), pc->Text(), cpd.al[idx].col);
+                    idx, get_token_name(pc->GetType()), get_token_name(cpd.al[idx].type), pc->GetLogText(), cpd.al[idx].col);
 
             if (num_token->IsNotNullChunk())
             {
@@ -121,7 +121,7 @@ void align_init_brace(Chunk *start)
                reindent_line(num_token, cpd.al[idx].col - col_diff);
                //LOG_FMT(LSYS, "-= %zu =- NUM indent [%s] col=%d diff=%d\n",
                //        num_token->GetOrigLine(),
-               //        num_token->Text(), cpd.al[idx - 1].col, col_diff);
+               //        num_token->GetLogText(), cpd.al[idx - 1].col, col_diff);
 
                num_token->SetFlagBits(PCF_WAS_ALIGNED);
                num_token = Chunk::NullChunkPtr;
@@ -136,7 +136,7 @@ void align_init_brace(Chunk *start)
                {
                   //LOG_FMT(LSYS, "-= %zu =- indent [%s] col=%d len=%d\n",
                   //        next->GetOrigLine(),
-                  //        next->Text(), cpd.al[idx].col, cpd.al[idx].len);
+                  //        next->GetLogText(), cpd.al[idx].col, cpd.al[idx].len);
 
                   log_rule_B("align_number_right");
 

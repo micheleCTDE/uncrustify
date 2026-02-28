@@ -308,8 +308,8 @@ void undo_one_liner(Chunk *pc)
    if (  pc->IsNotNullChunk()
       && pc->TestFlags(PCF_ONE_LINER))
    {
-      LOG_FMT(LNL1LINE, "%s(%d): pc->Text() '%s', orig line is %zu, orig col is %zu",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+      LOG_FMT(LNL1LINE, "%s(%d): text '%s', orig line is %zu, orig col is %zu",
+              __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
       pc->ResetFlagBits(PCF_ONE_LINER);
 
       // scan backward
@@ -320,12 +320,12 @@ void undo_one_liner(Chunk *pc)
       {
          if (!tmp->TestFlags(PCF_ONE_LINER))
          {
-            LOG_FMT(LNL1LINE, "%s(%d): tmp->Text() '%s', orig line is %zu, orig col is %zu, --> break\n",
-                    __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol());
+            LOG_FMT(LNL1LINE, "%s(%d): tmp->text '%s', orig line is %zu, orig col is %zu, --> break\n",
+                    __func__, __LINE__, tmp->GetLogText(), tmp->GetOrigLine(), tmp->GetOrigCol());
             break;
          }
-         LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->Text() '%s', orig line is %zu, orig col is %zu",
-                 __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol());
+         LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->text '%s', orig line is %zu, orig col is %zu",
+                 __func__, __LINE__, tmp->GetLogText(), tmp->GetOrigLine(), tmp->GetOrigCol());
          tmp->ResetFlagBits(PCF_ONE_LINER);
       }
       // scan forward
@@ -337,12 +337,12 @@ void undo_one_liner(Chunk *pc)
       {
          if (!tmp->TestFlags(PCF_ONE_LINER))
          {
-            LOG_FMT(LNL1LINE, "%s(%d): tmp->Text() '%s', orig line is %zu, orig col is %zu, --> break\n",
-                    __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol());
+            LOG_FMT(LNL1LINE, "%s(%d): tmp->text '%s', orig line is %zu, orig col is %zu, --> break\n",
+                    __func__, __LINE__, tmp->GetLogText(), tmp->GetOrigLine(), tmp->GetOrigCol());
             break;
          }
-         LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->Text() '%s', orig line is %zu, orig col is %zu",
-                 __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol());
+         LOG_FMT(LNL1LINE, "%s(%d): clear for tmp->text '%s', orig line is %zu, orig col is %zu",
+                 __func__, __LINE__, tmp->GetLogText(), tmp->GetOrigLine(), tmp->GetOrigCol());
          tmp->ResetFlagBits(PCF_ONE_LINER);
       }
       LOG_FMT(LNL1LINE, "\n");

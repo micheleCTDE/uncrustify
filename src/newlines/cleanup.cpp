@@ -51,7 +51,7 @@ void newlines_cleanup_angles()
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
       char copy[1000];
-      LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
+      LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy));
 
       if (pc->Is(CT_ANGLE_OPEN))
@@ -77,7 +77,7 @@ void newlines_cleanup_braces(bool first)
    for ( ; pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
       char copy[1000];
-      LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
+      LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy));
 
       if (  pc->Is(CT_IF)
@@ -104,7 +104,7 @@ void newlines_cleanup_braces(bool first)
          log_rule_B("nl_oc_brace_catch");
 
          if (  language_is_set(lang_flag_e::LANG_OC)
-            && (pc->GetStr()[0] == '@')
+            && (pc->GetText()[0] == '@')
             && (options::nl_oc_brace_catch() != IARF_IGNORE))
          {
             newlines_cuddle_uncuddle(pc, options::nl_oc_brace_catch());
@@ -297,8 +297,8 @@ void newlines_cleanup_braces(bool first)
                // look back if we have a @interface or a @implementation
                for (Chunk *tmp = pc->GetPrev(); tmp->IsNotNullChunk(); tmp = tmp->GetPrev())
                {
-                  LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                          __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(), tmp->Text());
+                  LOG_FMT(LBLANK, "%s(%d): orig line is %zu, orig col is %zu, text is '%s'\n",
+                          __func__, __LINE__, tmp->GetOrigLine(), tmp->GetOrigCol(), tmp->GetLogText());
 
                   if (  tmp->Is(CT_OC_INTF)
                      || tmp->Is(CT_OC_IMPL))
@@ -748,8 +748,8 @@ void newlines_cleanup_braces(bool first)
 
                for (Chunk *temp = pc; temp != end; temp = temp->GetNext())
                {
-                  LOG_FMT(LNEWLINE, "%s(%d): Text() is '%s', type is %s, level is %zu\n",
-                          __func__, __LINE__, temp->Text(), get_token_name(temp->GetType()), temp->GetLevel());
+                  LOG_FMT(LNEWLINE, "%s(%d): text is '%s', type is %s, level is %zu\n",
+                          __func__, __LINE__, temp->GetLogText(), get_token_name(temp->GetType()), temp->GetLevel());
                   // produces much more log output. Use it only debugging purpose
                   //log_pcf_flags(LNEWLINE, temp->GetFlags());
                   temp->ResetFlagBits(PCF_ONE_LINER);
@@ -818,7 +818,7 @@ void newlines_cleanup_braces(bool first)
          }
       }
       else if (  pc->Is(CT_QUALIFIER)
-              && !strcmp(pc->Text(), "throws"))
+              && !strcmp(pc->GetLogText(), "throws"))
       {
          Chunk *prev = pc->GetPrev();
 
@@ -1144,8 +1144,8 @@ void newlines_cleanup_braces(bool first)
                           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol());
                   exit(EXIT_FAILURE);
                }
-               LOG_FMT(LNEWLINE, "%s(%d): braceOpen orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                       __func__, __LINE__, braceOpen->GetOrigLine(), braceOpen->GetOrigCol(), braceOpen->Text());
+               LOG_FMT(LNEWLINE, "%s(%d): braceOpen orig line is %zu, orig col is %zu, text is '%s'\n",
+                       __func__, __LINE__, braceOpen->GetOrigLine(), braceOpen->GetOrigCol(), braceOpen->GetLogText());
                // produces much more log output. Use it only debugging purpose
                //log_pcf_flags(LNEWLINE, braceOpen->GetFlags());
                newlines_namespace(pc);

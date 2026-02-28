@@ -115,7 +115,7 @@ void reindent_line(Chunk *pc, size_t column)
          }
          else
          {
-            LOG_FMT(LINDLINED, "'%s'", pc->Text());
+            LOG_FMT(LINDLINED, "'%s'", pc->GetLogText());
          }
          LOG_FMT(LINDLINED, " to %zu (orig %zu/%zu)\n", pc->GetColumn(), pc->GetOrigLine(), pc->GetOrigCol());
       }

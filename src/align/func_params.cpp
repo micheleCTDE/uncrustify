@@ -25,7 +25,7 @@ Chunk *align_func_param(Chunk *start)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate is '%s': orig line is %zu, column is %zu, type is %s, level is %zu\n",
-           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetColumn(),
+           __func__, __LINE__, start->GetLogText(), start->GetOrigLine(), start->GetColumn(),
            get_token_name(start->GetType()), start->GetLevel());
    // Defaults, if the align_func_params = true
    size_t myspan   = 2;
@@ -187,8 +187,8 @@ void align_func_params()
 
    while ((pc = pc->GetNext())->IsNotNullChunk())
    {
-      LOG_FMT(LFLPAREN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s, parent type is %s\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
+      LOG_FMT(LFLPAREN, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', type is %s, parent type is %s\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(),
               get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (  pc->IsNot(CT_FPAREN_OPEN)

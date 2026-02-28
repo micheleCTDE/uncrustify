@@ -21,14 +21,14 @@ Chunk *flag_parens(Chunk *po, PcfFlags flags, E_Token opentype, E_Token parent_t
    if (paren_close->IsNullChunk())
    {
       LOG_FMT(LERR, "%s(%d): no match for '%s' at [%zu:%zu]",
-              __func__, __LINE__, po->Text(), po->GetOrigLine(), po->GetOrigCol());
+              __func__, __LINE__, po->GetLogText(), po->GetOrigLine(), po->GetOrigCol());
       log_func_stack_inline(LERR);
       exit(EX_SOFTWARE);
    }
    LOG_FMT(LFLPAREN, "%s(%d): between  po is '%s', orig line is %zu, orig col is %zu, and\n",
-           __func__, __LINE__, po->Text(), po->GetOrigLine(), po->GetOrigCol());
+           __func__, __LINE__, po->GetLogText(), po->GetOrigLine(), po->GetOrigCol());
    LOG_FMT(LFLPAREN, "%s(%d): paren_close is '%s', orig line is %zu, orig col is %zu, type is %s, parent type is %s\n",
-           __func__, __LINE__, paren_close->Text(), paren_close->GetOrigLine(), paren_close->GetOrigCol(),
+           __func__, __LINE__, paren_close->GetLogText(), paren_close->GetOrigLine(), paren_close->GetOrigCol(),
            get_token_name(opentype), get_token_name(parent_type));
    log_func_stack_inline(LFLPAREN);
 

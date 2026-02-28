@@ -16,24 +16,24 @@ using namespace uncrustify;
 
 static bool is_storage_keyword(const Chunk *pc)
 {
-   return(  strcmp(pc->Text(), "auto") == 0
-         || strcmp(pc->Text(), "const") == 0
-         || strcmp(pc->Text(), "extern") == 0
-         || strcmp(pc->Text(), "mutable") == 0
-         || strcmp(pc->Text(), "register") == 0
-         || strcmp(pc->Text(), "static") == 0
-         || strcmp(pc->Text(), "thread_local") == 0
-         || strcmp(pc->Text(), "typedef") == 0
-         || strcmp(pc->Text(), "volatile") == 0
-         || strcmp(pc->Text(), "_Atomic") == 0
-         || strcmp(pc->Text(), "_Thread_local") == 0);
+   return(  strcmp(pc->GetLogText(), "auto") == 0
+         || strcmp(pc->GetLogText(), "const") == 0
+         || strcmp(pc->GetLogText(), "extern") == 0
+         || strcmp(pc->GetLogText(), "mutable") == 0
+         || strcmp(pc->GetLogText(), "register") == 0
+         || strcmp(pc->GetLogText(), "static") == 0
+         || strcmp(pc->GetLogText(), "thread_local") == 0
+         || strcmp(pc->GetLogText(), "typedef") == 0
+         || strcmp(pc->GetLogText(), "volatile") == 0
+         || strcmp(pc->GetLogText(), "_Atomic") == 0
+         || strcmp(pc->GetLogText(), "_Thread_local") == 0);
 }
 
 
 static bool is_non_integer(const Chunk *pc)
 {
-   return(  strcmp(pc->Text(), "char") == 0
-         || strcmp(pc->Text(), "double") == 0);
+   return(  strcmp(pc->GetLogText(), "char") == 0
+         || strcmp(pc->GetLogText(), "double") == 0);
 }
 
 
@@ -72,7 +72,7 @@ static bool find_non_storage_siblings(const Chunk *pc, Chunk * &prev, Chunk * &n
 
 static void add_or_remove_int_keyword(Chunk *pc, Chunk *sibling, iarf_e action, E_Direction dir, Chunk * &int_keyword)
 {
-   if (strcmp(sibling->Text(), "int") == 0)
+   if (strcmp(sibling->GetLogText(), "int") == 0)
    {
       if (action == IARF_REMOVE)
       {
@@ -129,7 +129,7 @@ static void add_or_remove_int_keyword(Chunk *pc, Chunk *sibling, iarf_e action, 
          {
             int_keyword = pc->CopyAndAddAfter(pc);
          }
-         int_keyword->Str() = "int";
+         int_keyword->Text() = "int";
       }
    }
 } // add_or_remove_int_keyword
@@ -145,7 +145,7 @@ void change_int_types()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      if (strcmp(pc->Text(), "short") == 0)
+      if (strcmp(pc->GetLogText(), "short") == 0)
       {
          if (find_non_storage_siblings(pc, prev, next))
          {
@@ -153,7 +153,7 @@ void change_int_types()
             add_or_remove_int_keyword(pc, next, options::mod_short_int(), E_Direction::FORWARD, int_keyword);
          }
       }
-      else if (strcmp(pc->Text(), "long") == 0)
+      else if (strcmp(pc->GetLogText(), "long") == 0)
       {
          if (find_non_storage_siblings(pc, prev, next))
          {
@@ -161,7 +161,7 @@ void change_int_types()
             add_or_remove_int_keyword(pc, next, options::mod_long_int(), E_Direction::FORWARD, int_keyword);
          }
       }
-      else if (strcmp(pc->Text(), "signed") == 0)
+      else if (strcmp(pc->GetLogText(), "signed") == 0)
       {
          if (find_non_storage_siblings(pc, prev, next))
          {
@@ -169,7 +169,7 @@ void change_int_types()
             add_or_remove_int_keyword(pc, next, options::mod_signed_int(), E_Direction::FORWARD, int_keyword);
          }
       }
-      else if (strcmp(pc->Text(), "unsigned") == 0)
+      else if (strcmp(pc->GetLogText(), "unsigned") == 0)
       {
          if (find_non_storage_siblings(pc, prev, next))
          {
@@ -177,7 +177,7 @@ void change_int_types()
             add_or_remove_int_keyword(pc, next, options::mod_unsigned_int(), E_Direction::FORWARD, int_keyword);
          }
       }
-      else if (  strcmp(pc->Text(), "int") != 0
+      else if (  strcmp(pc->GetLogText(), "int") != 0
               && !is_storage_keyword(pc))
       {
          int_keyword = Chunk::NullChunkPtr; // We are no longer in a variable declaration

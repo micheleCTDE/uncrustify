@@ -30,9 +30,9 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
    int   square_bracket_depth    = 0;
    int   brace_depth             = 0;       // Test #51012: Track OC dictionary @{...} depth
 
-   LOG_FMT(LCOMBINE, "%s(%d): pc_question.orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
+   LOG_FMT(LCOMBINE, "%s(%d): pc_question.orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
            __func__, __LINE__, pc_question->GetOrigLine(), pc_question->GetOrigCol(), pc_question->GetLevel(),
-           pc_question->Text());
+           pc_question->GetLogText());
 
    if (pc2->Is(CT_COLON))
    {
@@ -42,8 +42,8 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
    // examine the next tokens, look for E2, E3, COLON, might be for a next CT_QUESTION
    while (pc2->IsNotNullChunk())
    {
-      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-              __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+              __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
 
       // Issue: Don't treat comma inside OC message as terminator
       // Use <= 0 to handle ternary starting inside OC message brackets
@@ -53,19 +53,19 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             || pc2->Is(CT_COMMA))
          && square_bracket_depth <= 0)
       {
-         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                 __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                 __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
          pc2->SetFlagBits(PCF_IN_CONDITIONAL);
          log_pcf_flags(LCOMBINE, pc2->GetFlags());
 
          if (colon_found)
          {
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
             pc_question->SetParent(pc2);   // back again
 
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
             return(pc2);
          }
          else
@@ -92,17 +92,17 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             // We still need to process it recursively so it gets properly marked,
             // but we pass is_sibling_ternary = true so it doesn't mark subsequent
             // OC selector colons as CT_COND_COLON.
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s' (sibling ternary)\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s' (sibling ternary)\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
             pc2 = search_for_colon(pc2, depth + 1, true);  // is_sibling_ternary = true
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
             continue;
          }
          else
          {
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
 
             // Test #51011: Check if this is an elvis operator (?:) - the next token after ? is :
             // If so, we need to mark the elvis colon and continue searching for the outer ternary's colon.
@@ -126,21 +126,21 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
             {
                // Regular nested ternary - recurse
                pc2 = search_for_colon(pc2, depth + 1);
-               LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                       __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+               LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                       __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
                continue;
             }
          }
       }
       else if (pc2->Is(CT_COND_COLON))
       {
-         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                 __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                 __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
 
          if (colon_found)
          {
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
             Chunk *pr = pc2->GetPrevNcNnl();
             return(pr);
          }
@@ -166,8 +166,8 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
               && square_bracket_depth <= 0
               && brace_depth <= 0)  // Test #51012: Don't mark dictionary colons as ternary colons
       {
-         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                 __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                 __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
 
          // Test #51009: If square_bracket_depth is negative, we've exited more brackets
          // than we entered during this ternary search. This means we've left the ternary's
@@ -211,8 +211,8 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
          {
             // E2 found   orig line is 23, orig col is 3
             pc2->SetType(CT_COND_COLON);
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                    __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel(), pc2->GetLogText());
             pc2->SetParent(pc_question);              // save the question token
             pc_question->SetParent(pc2);              // back again
 
@@ -256,7 +256,7 @@ Chunk *search_for_colon(Chunk *pc_question, int depth, bool is_sibling_ternary =
       }
       pc2 = pc2->GetNextNcNnl();
    }
-   LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '?'\n",
+   LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '?'\n",
            __func__, __LINE__, pc2->GetOrigLine(), pc2->GetOrigCol(), pc2->GetLevel());
    return(pc2);
 } // search_for_colon
@@ -271,8 +271,8 @@ void mark_question_colon()
    // Issue #3558
    while (pc->IsNotNullChunk())
    {
-      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() '%s'\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
+      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->GetLogText());
       log_pcf_flags(LCOMBINE, pc->GetFlags());
 
       if (  pc->Is(CT_QUESTION)
@@ -282,8 +282,8 @@ void mark_question_colon()
          // look for E2, COLON, E3...
          pc = search_for_colon(pc, 0);
 
-         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
+         LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->GetLogText());
 
          if (  pc->Is(CT_SEMICOLON)
             || (  pc->Is(CT_PAREN_CLOSE)
@@ -291,8 +291,8 @@ void mark_question_colon()
             || pc->Is(CT_COMMA))
          {
             // set at the end of the question statement ...
-            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
+            LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text is '%s'\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->GetLogText());
             // ... and go on
          }
       }
@@ -301,8 +301,8 @@ void mark_question_colon()
 
    for (pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
-      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, Text() '%s'\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->Text());
+      LOG_FMT(LCOMBINE, "%s(%d): orig line is %zu, orig col is %zu, level is %zu, text '%s'\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel(), pc->GetLogText());
 
       if (pc->Is(CT_QUESTION))
       {

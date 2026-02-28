@@ -427,7 +427,7 @@ static bool chunk_is_macro_reference(Chunk *pc)
       while (next->IsNotNullChunk())
       {
          if (  next->TestFlags(PCF_IN_PREPROC)
-            && std::strcmp(pc->GetStr().c_str(), next->GetStr().c_str()) == 0)
+            && std::strcmp(pc->GetText().GetLogText(), next->GetText().GetLogText()) == 0)
          {
             return(true);
          }
@@ -1596,7 +1596,7 @@ void EnumStructUnionParser::mark_constructors()
               __LINE__,
               m_start->GetOrigLine(),
               m_start->GetOrigCol(),
-              m_start->Text(),
+              m_start->GetLogText(),
               get_token_name(m_start->GetParentType()));
 
       log_pcf_flags(LFTOR, m_start->GetFlags());
@@ -1604,7 +1604,7 @@ void EnumStructUnionParser::mark_constructors()
       /**
        * get the name of the type
        */
-      auto *name = m_type->Text();
+      auto *name = m_type->GetLogText();
 
       LOG_FMT(LFTOR, "%s(%d): Name of type is '%s'\n",
               __unqualified_func__, __LINE__, name);
@@ -1629,7 +1629,7 @@ void EnumStructUnionParser::mark_constructors()
             break;                            // Issue #4250
          }
 
-         if (  std::strcmp(prev->Text(), name) == 0
+         if (  std::strcmp(prev->GetLogText(), name) == 0
             && prev->GetBraceLevel() == braceLevel
             && next->IsParenOpen())
          {
@@ -1836,7 +1836,7 @@ void EnumStructUnionParser::mark_template(Chunk *start) const
               "%s(%d): Template detected: '%s' at orig line %zu, orig col %zu\n",
               __unqualified_func__,
               __LINE__,
-              start->Text(),
+              start->GetLogText(),
               start->GetOrigLine(),
               start->GetOrigCol());
    }
@@ -1864,7 +1864,7 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
               "%s(%d): Start of template detected: '%s' at orig line %zu, orig col %zu\n",
               __unqualified_func__,
               __LINE__,
-              start->Text(),
+              start->GetLogText(),
               start->GetOrigLine(),
               start->GetOrigCol());
 
@@ -1891,7 +1891,7 @@ void EnumStructUnionParser::mark_template_args(Chunk *start, Chunk *end) const
               "%s(%d): End of template detected: '%s' at orig line %zu, orig col %zu\n",
               __unqualified_func__,
               __LINE__,
-              end->Text(),
+              end->GetLogText(),
               end->GetOrigLine(),
               end->GetOrigCol());
    }
@@ -1926,7 +1926,7 @@ void EnumStructUnionParser::mark_variable(Chunk *variable, PcfFlags flags)
               "%s(%d): Variable definition detected: '%s' at orig line is %zu, orig col is %zu, set %s\n",
               __unqualified_func__,
               __LINE__,
-              variable->Text(),
+              variable->GetLogText(),
               variable->GetOrigLine(),
               variable->GetOrigCol(),
               flags & PCF_VAR_1ST_DEF ? "PCF_VAR_1ST_DEF" : "PCF_VAR_1ST");
@@ -2089,7 +2089,7 @@ void EnumStructUnionParser::parse(Chunk *pc)
       }
       else if (  next->Is(CT_QUALIFIER)
               && language_is_set(lang_flag_e::LANG_JAVA)
-              && std::strncmp(next->GetStr().c_str(), "implements", 10) == 0)
+              && std::strncmp(next->GetText().GetLogText(), "implements", 10) == 0)
       {
          mark_base_classes(next);
       }
@@ -2906,7 +2906,7 @@ bool EnumStructUnionParser::try_pre_identify_type()
       pc = pc->GetPrevNcNnlNi(E_Scope::PREPROC);
 
       if (  pc->Is(CT_QUALIFIER)
-         && std::strncmp(pc->GetStr().c_str(), "final", 5) == 0)
+         && std::strncmp(pc->GetText().GetLogText(), "final", 5) == 0)
       {
          pc = pc->GetPrevNcNnlNi(E_Scope::PREPROC);
       }

@@ -18,10 +18,10 @@ void newline_del_between(Chunk *start, Chunk *end)
 {
    LOG_FUNC_ENTRY();
 
-   LOG_FMT(LNEWLINE, "%s(%d): start->Text() is '%s', orig line is %zu, orig col is %zu\n",
-           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetOrigCol());
-   LOG_FMT(LNEWLINE, "%s(%d): and end->Text() is '%s', orig line is %zu, orig col is %zu: preproc=%c/%c\n",
-           __func__, __LINE__, end->Text(), end->GetOrigLine(), end->GetOrigCol(),
+   LOG_FMT(LNEWLINE, "%s(%d): start->text is '%s', orig line is %zu, orig col is %zu\n",
+           __func__, __LINE__, start->GetLogText(), start->GetOrigLine(), start->GetOrigCol());
+   LOG_FMT(LNEWLINE, "%s(%d): and end->text is '%s', orig line is %zu, orig col is %zu: preproc=%c/%c\n",
+           __func__, __LINE__, end->GetLogText(), end->GetOrigLine(), end->GetOrigCol(),
            start->TestFlags(PCF_IN_PREPROC) ? 'y' : 'n',
            end->TestFlags(PCF_IN_PREPROC) ? 'y' : 'n');
    log_func_stack_inline(LNEWLINE);

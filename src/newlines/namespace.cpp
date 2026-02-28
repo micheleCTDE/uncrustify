@@ -40,8 +40,8 @@ void newlines_namespace(Chunk *start)
    }
    Chunk *braceOpen = start->GetNextType(CT_BRACE_OPEN, start->GetLevel());
 
-   LOG_FMT(LNEWLINE, "%s(%d): braceOpen orig line is %zu, orig col is %zu, Text() is '%s'\n",
-           __func__, __LINE__, braceOpen->GetOrigLine(), braceOpen->GetOrigCol(), braceOpen->Text());
+   LOG_FMT(LNEWLINE, "%s(%d): braceOpen orig line is %zu, orig col is %zu, text is '%s'\n",
+           __func__, __LINE__, braceOpen->GetOrigLine(), braceOpen->GetOrigCol(), braceOpen->GetLogText());
    // produces much more log output. Use it only debugging purpose
    //log_pcf_flags(LNEWLINE, braceOpen->GetFlags());
 
@@ -53,8 +53,8 @@ void newlines_namespace(Chunk *start)
    }
    Chunk *beforeBrace = braceOpen->GetPrev();
 
-   LOG_FMT(LNEWLINE, "%s(%d): beforeBrace orig line is %zu, orig col is %zu, Text() is '%s'\n",
-           __func__, __LINE__, beforeBrace->GetOrigLine(), beforeBrace->GetOrigCol(), beforeBrace->Text());
+   LOG_FMT(LNEWLINE, "%s(%d): beforeBrace orig line is %zu, orig col is %zu, text is '%s'\n",
+           __func__, __LINE__, beforeBrace->GetOrigLine(), beforeBrace->GetOrigCol(), beforeBrace->GetLogText());
    // 'namespace' 'BRACE_OPEN'
    newline_iarf_pair(beforeBrace, braceOpen, nl_opt);
 } // newlines_namespace

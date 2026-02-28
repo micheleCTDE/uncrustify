@@ -94,7 +94,7 @@ void do_parens_assign()                         // Issue #3316
                continue;
             }
             LOG_FMT(LPARADD, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', level is %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetLevel());
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), pc->GetLevel());
             // look before for an open sparen
             size_t check_level = pc->GetLevel();
             Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
@@ -102,7 +102,7 @@ void do_parens_assign()                         // Issue #3316
             while (p->IsNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu, type is %s\n",
-                       __func__, __LINE__, p->GetOrigLine(), p->Text(), p->GetLevel(), get_token_name(p->GetType()));
+                       __func__, __LINE__, p->GetOrigLine(), p->GetLogText(), p->GetLevel(), get_token_name(p->GetType()));
 
                //log_pcf_flags(LPARADD, p->GetFlags());
                if (p->TestFlags(PCF_STMT_START))
@@ -127,7 +127,7 @@ void do_parens_assign()                         // Issue #3316
                }
             }
             LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, p->GetOrigLine(), p->Text(), p->GetLevel(), get_token_name(p->GetType()));
+                    __func__, __LINE__, p->GetOrigLine(), p->GetLogText(), p->GetLevel(), get_token_name(p->GetType()));
 
             if (p->GetParentType() == CT_WHILE)
             {
@@ -184,7 +184,7 @@ void do_parens_return()                         // Issue #3316
          if (pc->Is(CT_RETURN))
          {
             LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->Text(), pc->GetLevel());
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetLogText(), pc->GetLevel());
             // look before for a open sparen
             size_t check_level = pc->GetLevel();
             Chunk  *p          = pc->GetPrevNc(E_Scope::PREPROC);
@@ -192,7 +192,7 @@ void do_parens_return()                         // Issue #3316
             while (p->IsNotNullChunk())
             {
                LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu, type is %s\n",
-                       __func__, __LINE__, p->GetOrigLine(), p->Text(), p->GetLevel(), get_token_name(p->GetType()));
+                       __func__, __LINE__, p->GetOrigLine(), p->GetLogText(), p->GetLevel(), get_token_name(p->GetType()));
 
                //log_pcf_flags(LPARADD, p->GetFlags());
                if (p->TestFlags(PCF_STMT_START))
@@ -217,7 +217,7 @@ void do_parens_return()                         // Issue #3316
                }
             }
             LOG_FMT(LPARADD, "%s(%d): orig line is %zu, text is '%s', level is %zu, type is %s\n",
-                    __func__, __LINE__, p->GetOrigLine(), p->Text(), p->GetLevel(), get_token_name(p->GetType()));
+                    __func__, __LINE__, p->GetOrigLine(), p->GetLogText(), p->GetLevel(), get_token_name(p->GetType()));
 
             if (p->GetParentType() == CT_WHILE)
             {
@@ -243,10 +243,10 @@ static void add_parens_between(Chunk *first, Chunk *last)
 
    LOG_FMT(LPARADD, "%s(%d): first: line %zu, col %zu, between '%s' [lvl is %zu] and\n",
            __func__, __LINE__, first->GetOrigLine(), first->GetOrigCol(),
-           first->Text(), first->GetLevel());
+           first->GetLogText(), first->GetLevel());
    LOG_FMT(LPARADD, "%s(%d): last: line %zu, col %zu, '%s' [lvl is %zu]\n",
            __func__, __LINE__, last->GetOrigLine(), last->GetOrigCol(),
-           last->Text(), last->GetLevel());
+           last->GetLogText(), last->GetLevel());
 
    // Don't do anything if we have a bad sequence, ie "&& )"
    Chunk *first_n = first->GetNextNcNnl();
@@ -262,7 +262,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.SetColumn(first_n->GetColumn());                         // Issue #3236
    pc.SetOrigCol(first_n->GetOrigCol());                       // Issue #3236
    pc.SetOrigColEnd(first_n->GetOrigColEnd());                 // Issue #3236
-   pc.Str() = "(";
+   pc.Text() = "(";
    pc.SetFlags(first_n->GetFlags() & PCF_COPY_FLAGS);
    pc.SetLevel(first_n->GetLevel());
    pc.SetPpLevel(first_n->GetPpLevel());
@@ -278,7 +278,7 @@ static void add_parens_between(Chunk *first, Chunk *last)
    pc.SetColumn(last_prev->GetColumn() + 1);                         // Issue #3236
    pc.SetOrigCol(last_prev->GetOrigCol() + 1);                       // Issue #3236
    pc.SetOrigColEnd(last_prev->GetOrigColEnd() + 1);                 // Issue #3236
-   pc.Str() = ")";
+   pc.Text() = ")";
    pc.SetFlags(last_prev->GetFlags() & PCF_COPY_FLAGS);
    pc.SetLevel(last_prev->GetLevel());
    pc.SetPpLevel(last_prev->GetPpLevel());
@@ -320,7 +320,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       {
          LOG_FMT(LPARADD2, " -- bail on PP %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->GetType()),
-                 pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
+                 pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
          return;
       }
 
@@ -331,7 +331,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       {
          LOG_FMT(LPARADD2, " -- %s [%s] at line %zu col %zu, level %zu\n",
                  get_token_name(pc->GetType()),
-                 pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
+                 pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
 
          if (hit_compare)
          {
@@ -347,7 +347,7 @@ static void check_bool_parens(Chunk *popen, Chunk *pclose, int nest)
       else if (pc->Is(CT_COMPARE))
       {
          LOG_FMT(LPARADD2, " -- compare '%s' at line %zu, orig col is %zu, level is %zu\n",
-                 pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
+                 pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLevel());
          hit_compare = true;
       }
       else if (pc->IsParenOpen())

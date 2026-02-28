@@ -32,8 +32,8 @@ Chunk *newline_var_def_blk(Chunk *start)
    bool  var_blk       = false;
    bool  first_var_blk = true;
 
-   LOG_FMT(LVARDFBLK, "%s(%d): start orig line is %zu, orig col is %zu, Text() is '%s'\n",
-           __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol(), start->Text());
+   LOG_FMT(LVARDFBLK, "%s(%d): start orig line is %zu, orig col is %zu, text is '%s'\n",
+           __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol(), start->GetLogText());
 
    if (start->Is(CT_BRACE_OPEN))
    {
@@ -58,8 +58,8 @@ Chunk *newline_var_def_blk(Chunk *start)
       LOG_CHUNK(LTOK, pc);
 
       Chunk *next_pc = pc->GetNext();
-      LOG_FMT(LVARDFBLK, "%s(%d): next_pc orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
-              __func__, __LINE__, next_pc->GetOrigLine(), next_pc->GetOrigCol(), get_token_name(next_pc->GetType()), next_pc->Text());
+      LOG_FMT(LVARDFBLK, "%s(%d): next_pc orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
+              __func__, __LINE__, next_pc->GetOrigLine(), next_pc->GetOrigCol(), get_token_name(next_pc->GetType()), next_pc->GetLogText());
 
       // If next_pc token is CT_DC_MEMBER, skip it
       if (next_pc->Is(CT_DC_MEMBER))
@@ -125,8 +125,8 @@ Chunk *newline_var_def_blk(Chunk *start)
          // Find the "next" chunk for is_var_def()
          Chunk *next = pc->GetNextNcNnl();
 
-         LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
-                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()), next->Text());
+         LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
+                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()), next->GetLogText());
 
          // skip over all other type-like things
          while (  next->Is(CT_PTR_TYPE)  // Issue #2692
@@ -135,25 +135,25 @@ Chunk *newline_var_def_blk(Chunk *start)
                || next->Is(CT_TSQUARE))
          {
             next = next->GetNextNcNnl();
-            LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                    __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text());
+            LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, text is '%s'\n",
+                    __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->GetLogText());
          }
 
          if (next->IsNullChunk())
          {
             break;
          }
-         LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
-                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()), next->Text());
+         LOG_FMT(LVARDFBLK, "%s(%d): next orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
+                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), get_token_name(next->GetType()), next->GetLogText());
 
          // Find the end of the previous block
-         LOG_FMT(LVARDFBLK, "%s(%d): pc orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->Text());
+         LOG_FMT(LVARDFBLK, "%s(%d): pc orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetLogText());
 
          prev = pc->GetPrevNcNnl();
 
-         LOG_FMT(LVARDFBLK, "%s(%d): prev orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
-                 __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), get_token_name(prev->GetType()), prev->Text());
+         LOG_FMT(LVARDFBLK, "%s(%d): prev orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
+                 __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), get_token_name(prev->GetType()), prev->GetLogText());
 
          while (  prev->Is(CT_DC_MEMBER)
                || prev->Is(CT_QUALIFIER)
@@ -179,8 +179,8 @@ Chunk *newline_var_def_blk(Chunk *start)
          {
             prev = prev->GetPrev()->GetPrevNcNnlNi();   // Issue #2279
          }
-         LOG_FMT(LVARDFBLK, "%s(%d): prev orig line is %zu, orig col is %zu, type is %s, Text() is '%s'\n",
-                 __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), get_token_name(prev->GetType()), prev->Text());
+         LOG_FMT(LVARDFBLK, "%s(%d): prev orig line is %zu, orig col is %zu, type is %s, text is '%s'\n",
+                 __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), get_token_name(prev->GetType()), prev->GetLogText());
 
          if (pc->Is(CT_FUNC_CLASS_DEF))
          {
@@ -199,7 +199,7 @@ Chunk *newline_var_def_blk(Chunk *start)
          else if (is_var_def(pc, next))
          {
             LOG_FMT(LVARDFBLK, "%s(%d): 'typ==var' found: '%s %s' at line %zu\n",
-                    __func__, __LINE__, pc->Text(), next->Text(), pc->GetOrigLine());
+                    __func__, __LINE__, pc->GetLogText(), next->GetLogText(), pc->GetOrigLine());
             LOG_FMT(LBLANKD, "%s(%d): var_blk %s, first_var_blk %s, fn_top %s\n",
                     __func__, __LINE__, var_blk ? "TRUE" : "FALSE",
                     first_var_blk ? "TRUE" : "FALSE", fn_top ? "TRUE" : "FALSE");
@@ -211,7 +211,7 @@ Chunk *newline_var_def_blk(Chunk *start)
                && options::nl_var_def_blk_start() > 0)
             {
                LOG_FMT(LVARDFBLK, "%s(%d): pc is '%s', orig line is %zu\n",
-                       __func__, __LINE__, pc->Text(), pc->GetOrigLine());
+                       __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine());
 
                if (prev->IsNullChunk())
                {
@@ -220,7 +220,7 @@ Chunk *newline_var_def_blk(Chunk *start)
                else
                {
                   LOG_FMT(LVARDFBLK, "%s(%d): prev is '%s', orig line is %zu\n",
-                          __func__, __LINE__, prev->Text(), prev->GetOrigLine());
+                          __func__, __LINE__, prev->GetLogText(), prev->GetOrigLine());
 
                   if (!prev->IsBraceOpen())
                   {
@@ -235,8 +235,8 @@ Chunk *newline_var_def_blk(Chunk *start)
                && (options::nl_var_def_blk_in() > 0))
             {
                prev = pc->GetPrev();
-               LOG_FMT(LVARDFBLK, "%s(%d): prev orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                       __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->Text());
+               LOG_FMT(LVARDFBLK, "%s(%d): prev orig line is %zu, orig col is %zu, text is '%s'\n",
+                       __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->GetLogText());
 
                if (prev->IsNewline())
                {
@@ -291,9 +291,9 @@ Chunk *newline_var_def_blk(Chunk *start)
       did_this_line = true;
       pc            = pc->GetNext();
    }
-   LOG_FMT(LVARDFBLK, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s', level is %zu\n",
-           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), pc->GetLevel());
-   LOG_FMT(LVARDFBLK, "%s(%d): start orig line is %zu, orig col is %zu, Text() is '%s', level is %zu\n",
-           __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol(), start->Text(), start->GetLevel());
+   LOG_FMT(LVARDFBLK, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s', level is %zu\n",
+           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), pc->GetLevel());
+   LOG_FMT(LVARDFBLK, "%s(%d): start orig line is %zu, orig col is %zu, text is '%s', level is %zu\n",
+           __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol(), start->GetLogText(), start->GetLevel());
    return(pc);
 } // newline_var_def_blk

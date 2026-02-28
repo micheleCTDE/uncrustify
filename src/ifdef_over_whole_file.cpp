@@ -39,8 +39,8 @@ bool ifdef_over_whole_file()
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
-      LOG_FMT(LNOTE, "%s(%d): pc->pp level is %zu, pc orig line is %zu, orig col is %zu, pc->Text() is '%s'\n",
-              __func__, __LINE__, pc->GetPpLevel(), pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+      LOG_FMT(LNOTE, "%s(%d): pc->pp level is %zu, pc orig line is %zu, orig col is %zu, text is '%s'\n",
+              __func__, __LINE__, pc->GetPpLevel(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText());
 
       if (pc->IsCommentOrNewline())
       {

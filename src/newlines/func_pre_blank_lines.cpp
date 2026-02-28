@@ -49,7 +49,7 @@ void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
    LOG_FMT(LNLFUNCT, "%s(%d):    set blank line(s): for <NL> at line %zu, column %zu, start_type is %s\n",
            __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol(), get_token_name(start_type));
    LOG_FMT(LNLFUNCT, "%s(%d): BEGIN set blank line(s) for '%s' at line %zu\n",
-           __func__, __LINE__, start->Text(), start->GetOrigLine());
+           __func__, __LINE__, start->GetLogText(), start->GetOrigLine());
    /*
     * look backwards until we find:
     *   - open brace (don't add or remove)
@@ -64,8 +64,8 @@ void newlines_func_pre_blank_lines(Chunk *start, E_Token start_type)
 
    for (pc = start->GetPrev(); pc->IsNotNullChunk(); pc = pc->GetPrev())
    {
-      LOG_FMT(LNLFUNCT, "%s(%d): orig line is %zu, orig col is %zu, type is %s, Text() is '%s', new line count is %zu\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->Text(), pc->GetNlCount());
+      LOG_FMT(LNLFUNCT, "%s(%d): orig line is %zu, orig col is %zu, type is %s, text is '%s', new line count is %zu\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetLogText(), pc->GetNlCount());
 
       if (pc->IsNewline())
       {

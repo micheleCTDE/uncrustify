@@ -179,7 +179,7 @@ void align_func_proto(size_t span)
          }
          Chunk *tmp = step_back_over_member(toadd);
          LOG_FMT(LAS, "%s(%d): 'tmp' text is '%s', orig line is %zu, orig col is %zu, level is %zu, brace level is %zu\n",
-                 __func__, __LINE__, tmp->Text(), tmp->GetOrigLine(), tmp->GetOrigCol(),
+                 __func__, __LINE__, tmp->GetLogText(), tmp->GetOrigLine(), tmp->GetOrigCol(),
                  tmp->GetLevel(), tmp->GetBraceLevel());
          // test the Stack
          AlignStack *stack_at_l_bl = many_as.at(pc->GetLevel()).at(pc->GetBraceLevel());

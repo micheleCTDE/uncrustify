@@ -52,7 +52,7 @@ void Chunk::CopyFrom(const Chunk &o)
    m_prev   = Chunk::NullChunkPtr;
    m_parent = Chunk::NullChunkPtr;
 
-   m_str          = o.m_str;
+   m_text         = o.m_text;
    m_trackingList = o.m_trackingList;
 } // Chunk::CopyFrom
 
@@ -86,14 +86,14 @@ void Chunk::Reset()
    m_parent = Chunk::NullChunkPtr;
 
    // for debugging purpose only
-   m_str.clear();
+   m_text.clear();
    m_trackingList = nullptr;
 } // Chunk::Reset
 
 
 const char *Chunk::ElidedText(char *for_the_copy) const
 {
-   const char *test_it = Text();
+   const char *test_it = GetLogText();
 
    size_t     truncate_value = uncrustify::options::debug_truncate();
 
@@ -340,7 +340,7 @@ static void chunk_log_msg(const Chunk *chunk, const log_sev_t log, const char *s
    }
    else
    {
-      LOG_FMT(log, "Text() is '%s', type is %s,\n", chunk->Text(), get_token_name(chunk->GetType()));
+      LOG_FMT(log, "text is '%s', type is %s,\n", chunk->GetLogText(), get_token_name(chunk->GetType()));
    }
 } // chunk_log_msg
 
@@ -416,7 +416,7 @@ bool Chunk::IsAddress() const
    if (  IsNotNullChunk()
       && (  Is(CT_BYREF)
          || (  Len() == 1
-            && m_str[0] == '&'
+            && m_text[0] == '&'
             && IsNot(CT_OPERATOR_VAL))))
    {
       const Chunk *prevc = GetPrev();
@@ -552,12 +552,12 @@ void Chunk::SetResetFlags(PcfFlags resetBits, PcfFlags setBits)
       {
          LOG_FMT(LSETFLG,
                  "%s(%d): %016llx^%016llx=%016llx\n"
-                 "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s,",
+                 "%s(%d): orig line is %zu, orig col is %zu, text is '%s', type is %s,",
                  __func__, __LINE__,
                  static_cast<PcfFlags::int_t>(m_flags),
                  static_cast<PcfFlags::int_t>(m_flags ^ newFlags),
                  static_cast<PcfFlags::int_t>(newFlags),
-                 __func__, __LINE__, m_origLine, m_origCol, Text(), get_token_name(m_type));
+                 __func__, __LINE__, m_origLine, m_origCol, GetLogText(), get_token_name(m_type));
          LOG_FMT(LSETFLG, "  parent type is %s,\n",
                  get_token_name(m_parentType));
          log_func_stack_inline(LSETFLG);
@@ -581,7 +581,7 @@ void Chunk::SetType(const E_Token token)
    {
       return;
    }
-   LOG_FMT(LSETTYP, "%s(%d): m_origLine is %zu, m_origCol is %zu, Text() is ",
+   LOG_FMT(LSETTYP, "%s(%d): m_origLine is %zu, m_origCol is %zu, text is ",
            __func__, __LINE__, m_origLine, m_origCol);
 
    if (token == CT_NEWLINE)
@@ -594,7 +594,7 @@ void Chunk::SetType(const E_Token token)
    }
    else
    {
-      LOG_FMT(LSETTYP, "'%s'\n", Text());
+      LOG_FMT(LSETTYP, "'%s'\n", GetLogText());
    }
    LOG_FMT(LSETTYP, "   m_type is %s, m_parentType is %s => token is %s\n",
            get_token_name(m_type), get_token_name(m_parentType), get_token_name(token));
@@ -611,7 +611,7 @@ void Chunk::SetParentType(const E_Token token)
    {
       return;
    }
-   LOG_FMT(LSETPAR, "%s(%d): orig line is %zu, orig col is %zu, Text() is ",
+   LOG_FMT(LSETPAR, "%s(%d): orig line is %zu, orig col is %zu, text is ",
            __func__, __LINE__, m_origLine, m_origCol);
 
    if (token == CT_NEWLINE)
@@ -620,7 +620,7 @@ void Chunk::SetParentType(const E_Token token)
    }
    else
    {
-      LOG_FMT(LSETPAR, "'%s'\n", Text());
+      LOG_FMT(LSETPAR, "'%s'\n", GetLogText());
    }
    LOG_FMT(LSETPAR, "   type is %s, parent type is %s => new parent type is %s\n",
            get_token_name(m_type), get_token_name(m_parentType), get_token_name(token));
@@ -798,9 +798,9 @@ bool Chunk::IsStringAndLevel(const char *str, const size_t len,
             || m_level == static_cast<size_t>(level))
          && Len() == len                                    // the length is as expected
          && (  (  caseSensitive
-               && memcmp(Text(), str, len) == 0)
+               && memcmp(GetLogText(), str, len) == 0)
             || (  !caseSensitive
-               && strncasecmp(Text(), str, len) == 0)));   // the strings are equal
+               && strncasecmp(GetLogText(), str, len) == 0)));   // the strings are equal
 } // Chunk::IsStringAndLevel
 
 
@@ -883,7 +883,7 @@ bool Chunk::IsDoxygenComment() const
       return(false);
    }
    // check the third character
-   const char *sComment = Text();
+   const char *sComment = GetLogText();
    return(  (sComment[2] == '/')
          || (sComment[2] == '!')
          || (sComment[2] == '@'));

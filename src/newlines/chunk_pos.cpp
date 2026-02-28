@@ -46,7 +46,7 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
       char copy[1000];
-      LOG_FMT(LNEWLINE, "%s(%d): pc orig line is %zu, orig col is %zu, Text() is '%s'\n",
+      LOG_FMT(LNEWLINE, "%s(%d): pc orig line is %zu, orig col is %zu, text is '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy));
       // produces much more log output. Use it only debugging purpose
       //log_pcf_flags(LNEWLINE, pc->GetFlags());
@@ -57,8 +57,8 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
 
          if (chunk_type == CT_COMMA)
          {
-            LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+            LOG_FMT(LNEWLINE, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', type is %s\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
             // produces much more log output. Use it only debugging purpose
             //log_pcf_flags(LNEWLINE, pc->GetFlags());
 
@@ -101,10 +101,10 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
          LOG_FMT(LNEWLINE, "%s(%d): mode_local is %s\n",
                  __func__, __LINE__, to_string(mode_local));
 
-         LOG_FMT(LNEWLINE, "%s(%d): prev orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                 __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->Text());
-         LOG_FMT(LNEWLINE, "%s(%d): next orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text());
+         LOG_FMT(LNEWLINE, "%s(%d): prev orig line is %zu, orig col is %zu, text is '%s'\n",
+                 __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->GetLogText());
+         LOG_FMT(LNEWLINE, "%s(%d): next orig line is %zu, orig col is %zu, text is '%s'\n",
+                 __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->GetLogText());
          size_t nl_flag = ((prev->IsNewline() ? 1 : 0) |
                            (next->IsNewline() ? 2 : 0));
          LOG_FMT(LNEWLINE, "%s(%d): nl_flag is %zu\n",
@@ -209,15 +209,15 @@ void newlines_chunk_pos(E_Token chunk_type, uncrustify::token_pos_e mode)
          }
          else
          {
-            LOG_FMT(LNEWLINE, "%s(%d): prev orig line is %zu, orig col is %zu, Text() is '%s', new line count is %zu\n",
-                    __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->Text(), prev->GetNlCount());
+            LOG_FMT(LNEWLINE, "%s(%d): prev orig line is %zu, orig col is %zu, text is '%s', new line count is %zu\n",
+                    __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->GetLogText(), prev->GetNlCount());
 
             if (prev->GetNlCount() == 1)
             {
                // Back up to the next non-comment item
                prev = prev->GetPrevNc();
-               LOG_FMT(LNEWLINE, "%s(%d): prev orig line is %zu, orig col is %zu, Text() is '%s'\n",
-                       __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->Text());
+               LOG_FMT(LNEWLINE, "%s(%d): prev orig line is %zu, orig col is %zu, text is '%s'\n",
+                       __func__, __LINE__, prev->GetOrigLine(), prev->GetOrigCol(), prev->GetLogText());
 
                if (  prev->IsNotNullChunk()
                   && !prev->IsNewline()

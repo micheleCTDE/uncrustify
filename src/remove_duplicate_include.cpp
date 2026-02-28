@@ -26,8 +26,8 @@ void remove_duplicate_include()
 
    while (pc->IsNotNullChunk())
    {
-      //LOG_FMT(LRMRETURN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s, parent type is %s\n",
-      //        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(),
+      //LOG_FMT(LRMRETURN, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', type is %s, parent type is %s\n",
+      //        __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(),
       //        get_token_name(pc->GetType()), get_token_name(pc->GetParentType()));
 
       if (pc->Is(CT_PREPROC))
@@ -38,8 +38,8 @@ void remove_duplicate_include()
       {
          Chunk *next = pc->GetNext();
 
-         //LOG_FMT(LRMRETURN, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s', type is %s, parent type is %s\n",
-         //        __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text(),
+         //LOG_FMT(LRMRETURN, "%s(%d): orig line is %zu, orig col is %zu, text is '%s', type is %s, parent type is %s\n",
+         //        __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->GetLogText(),
          //        get_token_name(next->GetType()), get_token_name(next->GetParentType()));
          if (includes.empty())
          {
@@ -58,11 +58,11 @@ void remove_duplicate_include()
             {
                Chunk *current = *itc;
 
-               //LOG_FMT(LRMRETURN, "%s(%d): next->Text()    is '%s'\n",
-               //        __func__, __LINE__, next->Text());
-               //LOG_FMT(LRMRETURN, "%s(%d): current->Text() is '%s'\n",
-               //        __func__, __LINE__, current->Text());
-               if (std::strcmp(next->Text(), current->Text()) == 0)
+               //LOG_FMT(LRMRETURN, "%s(%d): next->text    is '%s'\n",
+               //        __func__, __LINE__, next->pc->GetLogText());
+               //LOG_FMT(LRMRETURN, "%s(%d): current->text is '%s'\n",
+               //        __func__, __LINE__, current->pc->GetLogText());
+               if (std::strcmp(next->GetLogText(), current->GetLogText()) == 0)
                {
                   // erase the statement
                   Chunk *temp    = pc;

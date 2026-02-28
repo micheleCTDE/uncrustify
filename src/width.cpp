@@ -128,7 +128,7 @@ static inline bool is_past_width(Chunk *pc)
    bool   past_width = currCol > options::code_width();
 
    LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, curr col %zu, text '%s', past width %s\n",
-           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), currCol, pc->Text(),
+           __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), currCol, pc->GetLogText(),
            past_width ? "YES" : "NO");
    return(past_width);
 }
@@ -137,7 +137,7 @@ static inline bool is_past_width(Chunk *pc)
 static void split_before_chunk(Chunk *pc)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): Text() '%s'\n", __func__, __LINE__, pc->Text());
+   LOG_FMT(LSPLIT, "%s(%d): text '%s'\n", __func__, __LINE__, pc->GetLogText());
 
    Chunk *prev = pc->GetPrev();
 
@@ -160,7 +160,7 @@ static void split_before_chunk(Chunk *pc)
          || prev->Is(CT_ANGLE_OPEN))
       {
          LOG_FMT(LSPLIT, "%s(%d): set PCF_LINE_CONT for prev text '%s', orig line is %zu, orig col is %zu\n",
-                 __func__, __LINE__, prev->Text(), prev->GetOrigLine(), prev->GetOrigCol());
+                 __func__, __LINE__, prev->GetLogText(), prev->GetOrigLine(), prev->GetOrigCol());
 
          prev->SetFlagBits(PCF_CONT_LINE);
          Chunk *closing_paren = prev->GetClosingParen();
@@ -244,13 +244,13 @@ void do_code_width()
             // After the split, skip over the remainder of the line.
             Chunk *nextNl = pc->GetNextNl();
             LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, text '%s' split\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText());
             pc = nextNl;
          }
          else
          {
             LOG_FMT(LSPLIT, "%s(%d): orig line %zu, orig col %zu, text '%s' not split\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText());
             break;
          }
       }
@@ -278,7 +278,7 @@ static void try_split_here(SplitEntry &ent, Chunk *pc)
 
    size_t pc_pri = get_split_pri(pc->GetType());
    LOG_FMT(LSPLIT, "%s(%d): text '%s', orig col %zu pc_pri %zu\n",
-           __func__, __LINE__, pc->Text(), pc->GetOrigCol(), pc_pri);
+           __func__, __LINE__, pc->GetLogText(), pc->GetOrigCol(), pc_pri);
 
    if (pc_pri == 0)
    {
@@ -386,7 +386,7 @@ static bool split_line(Chunk *start)
 {
    LOG_FUNC_ENTRY();
    LOG_FMT(LSPLIT, "%s(%d): start text '%s', orig line %zu, orig col %zu, type %s\n",
-           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetOrigCol(), get_token_name(start->GetType()));
+           __func__, __LINE__, start->GetLogText(), start->GetOrigLine(), start->GetOrigCol(), get_token_name(start->GetType()));
    LOG_FMT(LSPLIT, "   flags ");
    log_pcf_flags(LSPLIT, start->GetFlags());
    LOG_FMT(LSPLIT, "   parent type %s, (PCF_IN_FCN_DEF %s), (PCF_IN_FCN_CALL %s)\n",
@@ -466,7 +466,7 @@ static bool split_line(Chunk *start)
          && !pc->IsNewline())
    {
       LOG_FMT(LSPLIT, "%s(%d): text '%s', orig line is %zu, orig col is %zu\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol());
+              __func__, __LINE__, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol());
 
       if (pc->IsNot(CT_SPACE))
       {
@@ -487,14 +487,14 @@ static bool split_line(Chunk *start)
    if (ent.pc->IsNullChunk())
    {
       LOG_FMT(LSPLIT, "%s(%d):    TRY_SPLIT yielded NO SOLUTION for orig line %zu at '%s' [%s]\n",
-              __func__, __LINE__, start->GetOrigLine(), start->Text(), get_token_name(start->GetType()));
+              __func__, __LINE__, start->GetOrigLine(), start->GetLogText(), get_token_name(start->GetType()));
    }
    else
    {
       LOG_FMT(LSPLIT, "%s(%d):    TRY_SPLIT yielded '%s' [%s] on orig line %zu\n",
-              __func__, __LINE__, ent.pc->Text(), get_token_name(ent.pc->GetType()), ent.pc->GetOrigLine());
+              __func__, __LINE__, ent.pc->GetLogText(), get_token_name(ent.pc->GetType()), ent.pc->GetOrigLine());
       LOG_FMT(LSPLIT, "%s(%d): ent at '%s', orig col is %zu\n",
-              __func__, __LINE__, ent.pc->Text(), ent.pc->GetOrigCol());
+              __func__, __LINE__, ent.pc->GetLogText(), ent.pc->GetOrigCol());
    }
 
    // Break before the token instead of after it according to the pos_xxx rules
@@ -544,7 +544,7 @@ static bool split_line(Chunk *start)
          pc = ent.pc->GetNext();
       }
       LOG_FMT(LSPLIT, "%s(%d): at '%s', orig col is %zu\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigCol());
+              __func__, __LINE__, pc->GetLogText(), pc->GetOrigCol());
    }
    bool move_forward = false;
 
@@ -613,14 +613,9 @@ static bool split_line(Chunk *start)
       && !pc->IsNewline()
       && !prev->IsNewline())
    {
-      //int plen = (pc->Len() < 5) ? pc->Len() : 5;
-      //int slen = (start->Len() < 5) ? start->Len() : 5;
-      //LOG_FMT(LSPLIT, " '%.*s' [%s], started on token '%.*s' [%s]\n",
-      //        plen, pc->Text(), get_token_name(pc->GetType()),
-      //        slen, start->Text(), get_token_name(start->GetType()));
-      LOG_FMT(LSPLIT, "%s(%d): Text() '%s', type %s, started on token '%s', type %s\n",
-              __func__, __LINE__, pc->Text(), get_token_name(pc->GetType()),
-              start->Text(), get_token_name(start->GetType()));
+      LOG_FMT(LSPLIT, "%s(%d): text '%s', type %s, started on token '%s', type %s\n",
+              __func__, __LINE__, pc->GetLogText(), get_token_name(pc->GetType()),
+              start->GetLogText(), get_token_name(start->GetType()));
 
       split_before_chunk(pc);
    }
@@ -646,7 +641,7 @@ static void split_for_stmt(Chunk *start)
    size_t nl_cnt      = 0;
 
    LOG_FMT(LSPLIT, "%s: starting on %s, line %zu\n",
-           __func__, start->Text(), start->GetOrigLine());
+           __func__, start->GetLogText(), start->GetOrigLine());
 
    // Find the open paren so we know the level and count newlines
    Chunk *pc = start;
@@ -711,7 +706,7 @@ static void split_for_stmt(Chunk *start)
    while (--count >= 0)
    {
       // TODO: st[0] may be uninitialized here
-      LOG_FMT(LSPLIT, "%s(%d): split before %s\n", __func__, __LINE__, st[count]->Text());
+      LOG_FMT(LSPLIT, "%s(%d): split before %s\n", __func__, __LINE__, st[count]->GetLogText());
       split_before_chunk(st[count]->GetNext());
    }
 
@@ -759,7 +754,7 @@ static void split_for_stmt(Chunk *start)
 static void split_fcn_params_full(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): start at '%s'\n", __func__, __LINE__, start->Text());
+   LOG_FMT(LSPLIT, "%s(%d): start at '%s'\n", __func__, __LINE__, start->GetLogText());
 
    // Find the opening function parenthesis
    Chunk *fpo = start;
@@ -769,7 +764,7 @@ static void split_fcn_params_full(Chunk *start)
    while ((fpo = fpo->GetPrev())->IsNotNullChunk())
    {
       LOG_FMT(LSPLIT, "  %s(%d): %s, orig col is %zu, level is %zu\n",
-              __func__, __LINE__, fpo->Text(), fpo->GetOrigCol(), fpo->GetLevel());
+              __func__, __LINE__, fpo->GetLogText(), fpo->GetOrigCol(), fpo->GetLevel());
 
       if (  fpo->Is(CT_FPAREN_OPEN)
          && (fpo->GetLevel() == start->GetLevel() - 1))
@@ -801,7 +796,7 @@ static void split_fcn_params_full(Chunk *start)
 void split_bool_expr(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "%s(%d): start at '%s'\n", __func__, __LINE__, start->Text());
+   LOG_FMT(LSPLIT, "%s(%d): start at '%s'\n", __func__, __LINE__, start->GetLogText());
    bool   lead = options::pos_bool() & TP_LEAD ? true : false;
 
    Chunk  *pc                 = start;
@@ -817,7 +812,7 @@ void split_bool_expr(Chunk *start)
          && !pc->IsNewline())
    {
       LOG_FMT(LSPLIT, "  %s(%d): %s, orig col is %zu, level is %zu\n",
-              __func__, __LINE__, pc->Text(), pc->GetOrigCol(), pc->GetLevel());
+              __func__, __LINE__, pc->GetLogText(), pc->GetOrigCol(), pc->GetLevel());
 
       if (pc->Is(CT_BOOL))
       {
@@ -892,7 +887,7 @@ void split_bool_expr(Chunk *start)
 static void split_template(Chunk *start)
 {
    LOG_FUNC_ENTRY();
-   LOG_FMT(LSPLIT, "  %s(%d): start %s\n", __func__, __LINE__, start->Text());
+   LOG_FMT(LSPLIT, "  %s(%d): start %s\n", __func__, __LINE__, start->GetLogText());
    LOG_FMT(LSPLIT, "  %s(%d): back up until the prev is a comma\n", __func__, __LINE__);
 
    // back up until the prev is a comma
@@ -900,7 +895,7 @@ static void split_template(Chunk *start)
 
    while ((prev = prev->GetPrev())->IsNotNullChunk())
    {
-      LOG_FMT(LSPLIT, "  %s(%d): prev '%s'\n", __func__, __LINE__, prev->Text());
+      LOG_FMT(LSPLIT, "  %s(%d): prev '%s'\n", __func__, __LINE__, prev->GetLogText());
 
       if (  prev->IsNewline()
          || prev->Is(CT_COMMA))

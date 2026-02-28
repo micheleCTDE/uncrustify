@@ -51,7 +51,7 @@ static void mark_attributes_in_property_with_open_paren(Chunk *open_paren);
 
 void split_off_angle_close(Chunk *pc)
 {
-   const chunk_tag_t *ct = find_punctuator(pc->Text() + 1, cpd.lang_flags);
+   const chunk_tag_t *ct = find_punctuator(pc->GetLogText() + 1, cpd.lang_flags);
 
    if (ct == nullptr)
    {
@@ -59,12 +59,12 @@ void split_off_angle_close(Chunk *pc)
    }
    Chunk nc = *pc;
 
-   pc->Str().resize(1);
+   pc->Text().resize(1);
    pc->SetOrigColEnd(pc->GetOrigCol() + 1);
    pc->SetType(CT_ANGLE_CLOSE);
 
    nc.SetType(ct->type);
-   nc.Str().pop_front();
+   nc.Text().pop_front();
    nc.SetOrigCol(nc.GetOrigCol() + 1);
    nc.SetColumn(nc.GetColumn() + 1);
    nc.CopyAndAddAfter(pc);
@@ -98,11 +98,11 @@ void tokenize_trailing_return_types()
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNextNcNnl())
    {
       char copy[1000];
-      LOG_FMT(LNOTE, "%s(%d): orig line is %zu, orig col is %zu, Text() is '%s'\n",
+      LOG_FMT(LNOTE, "%s(%d): orig line is %zu, orig col is %zu, text is '%s'\n",
               __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->ElidedText(copy));
 
       if (  pc->Is(CT_MEMBER)
-         && (strcmp(pc->Text(), "->") == 0))
+         && (strcmp(pc->GetLogText(), "->") == 0))
       {
          Chunk *tmp = pc->GetPrevNcNnl();
          Chunk *tmp_2;
@@ -192,8 +192,8 @@ void tokenize_trailing_return_types()
                || tmp->GetParentType() == CT_FUNC_DEF))
          {
             pc->SetType(CT_TRAILING_RET);
-            LOG_FMT(LNOTE, "%s(%d): set trailing return type for Text() is '%s'\n",
-                    __func__, __LINE__, pc->Text());                  // Issue #3222
+            LOG_FMT(LNOTE, "%s(%d): set trailing return type for text is '%s'\n",
+                    __func__, __LINE__, pc->GetLogText());                  // Issue #3222
             // TODO
             // https://en.cppreference.com/w/cpp/language/function
             // noptr-declarator ( parameter-list ) cv(optional) ref(optional) except(optional) attr(optional) -> trailing
@@ -210,11 +210,11 @@ void tokenize_trailing_return_types()
 
                if (next->Is(CT_ARITH))
                {
-                  if (next->GetStr()[0] == '*')
+                  if (next->GetText()[0] == '*')
                   {
                      next->SetType(CT_PTR_TYPE);
                   }
-                  else if (next->GetStr()[0] == '&')                       // Issue #3407
+                  else if (next->GetText()[0] == '&')                       // Issue #3407
                   {
                      next->SetType(CT_BYREF);
                   }
@@ -256,7 +256,7 @@ void tokenize_cleanup()
          {
             // Change '[' + ']' into '[]'
             pc->SetType(CT_TSQUARE);
-            pc->Str() = "[]";
+            pc->Text() = "[]";
             /*
              * bug #664: The original m_origColEnd of CT_SQUARE_CLOSE is
              * stored at m_origColEnd of CT_TSQUARE.
@@ -287,7 +287,7 @@ void tokenize_cleanup()
          {
             // Change ':' + '=' into ':='
             pc->SetType(CT_SQL_ASSIGN);
-            pc->Str() = ":=";
+            pc->Text() = ":=";
             pc->SetOrigColEnd(next->GetOrigColEnd());
             Chunk::Delete(next);
          }
@@ -416,7 +416,7 @@ void tokenize_cleanup()
          || (  (  language_is_set(lang_flag_e::LANG_CS)
                || language_is_set(lang_flag_e::LANG_VALA))
             && (next->Is(CT_QUESTION))
-            && (strcmp(pc->Text(), "null") != 0)))
+            && (strcmp(pc->GetLogText(), "null") != 0)))
       {
          if (  pc->Is(CT_TYPE)
             || pc->Is(CT_QUALIFIER)
@@ -525,8 +525,8 @@ void tokenize_cleanup()
             && prev->IsString("static"))
          {
             // delete PREV and merge with IF
-            pc->Str().insert(0, ' ');
-            pc->Str().insert(0, prev->GetStr());
+            pc->Text().insert(0, ' ');
+            pc->Text().insert(0, prev->GetText());
             pc->SetOrigCol(prev->GetOrigCol());
             pc->SetOrigLine(prev->GetOrigLine());
             Chunk *to_be_deleted = prev;
@@ -596,7 +596,7 @@ void tokenize_cleanup()
        * likewise, 'class' may be a member name in Java.
        */
       if (  pc->Is(CT_CLASS)
-         && !CharTable::IsKw1(next->GetStr()[0]))
+         && !CharTable::IsKw1(next->GetText()[0]))
       {
          if (  next->IsNot(CT_DC_MEMBER)
             && next->IsNot(CT_ATTRIBUTE))                       // Issue #2570
@@ -614,7 +614,7 @@ void tokenize_cleanup()
 
             if (  next2->Is(CT_INV)      // CT_INV hasn't turned into CT_DESTRUCTOR just yet
                || (  next2->Is(CT_CLASS) // constructor isn't turned into CT_FUNC* just yet
-                  && !strcmp(pc->Text(), next2->Text())))
+                  && !strcmp(pc->GetLogText(), next2->GetLogText())))
             {
                pc->SetType(CT_TYPE);
             }
@@ -649,7 +649,7 @@ void tokenize_cleanup()
 
             if (tmp->Is(CT_PAREN_CLOSE))
             {
-               next->Str() = "()";
+               next->Text() = "()";
                next->SetType(CT_OPERATOR_VAL);
                Chunk::Delete(tmp);
                next->SetOrigColEnd(next->GetOrigColEnd() + 1);
@@ -659,7 +659,7 @@ void tokenize_cleanup()
                  && tmp2->Is(CT_ANGLE_CLOSE)
                  && tmp2->GetOrigCol() == next->GetOrigColEnd())
          {
-            next->Str().append('>');
+            next->Text().append('>');
             next->SetOrigColEnd(next->GetOrigColEnd() + 1);
             next->SetType(CT_OPERATOR_VAL);
             Chunk::Delete(tmp2);
@@ -697,9 +697,9 @@ void tokenize_cleanup()
 
                while (num_sp-- > 0)
                {
-                  next->Str().append(" ");
+                  next->Text().append(" ");
                }
-               next->Str().append(tmp->GetStr());
+               next->Text().append(tmp->GetText());
                tmp2 = tmp;
             }
 
@@ -714,7 +714,7 @@ void tokenize_cleanup()
          next->SetParentType(CT_OPERATOR);
 
          LOG_FMT(LOPERATOR, "%s(%d): %zu:%zu operator '%s'\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), next->Text());
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), next->GetLogText());
       }
 
       // Change private, public, protected into either a qualifier or label
@@ -754,19 +754,19 @@ void tokenize_cleanup()
       // Look for <newline> 'EXEC' 'SQL'
       if (  (  pc->IsString("EXEC", false)
             && next->IsString("SQL", false))
-         || (  (*pc->GetStr().c_str() == '$')
+         || (  (*pc->GetText().GetLogText() == '$')
             && pc->IsNot(CT_SQL_WORD)
                /* but avoid breaking tokenization for C# 6 interpolated strings. */
             && (  !language_is_set(lang_flag_e::LANG_CS)
                || (  pc->Is(CT_STRING)
-                  && (!pc->GetStr().startswith("$\""))
-                  && (!pc->GetStr().startswith("$@\""))))))
+                  && (!pc->GetText().startswith("$\""))
+                  && (!pc->GetText().startswith("$@\""))))))
       {
          Chunk *tmp = pc->GetPrev();
 
          if (tmp->IsNewline())
          {
-            if (*pc->GetStr().c_str() == '$')
+            if (*pc->GetText().GetLogText() == '$')
             {
                pc->SetType(CT_SQL_EXEC);
 
@@ -776,11 +776,11 @@ void tokenize_cleanup()
                   Chunk nc;
 
                   nc = *pc;
-                  pc->Str().resize(1);
+                  pc->Text().resize(1);
                   pc->SetOrigColEnd(pc->GetOrigCol() + 1);
 
                   nc.SetType(CT_SQL_WORD);
-                  nc.Str().pop_front();
+                  nc.Text().pop_front();
                   nc.SetOrigCol(nc.GetOrigCol() + 1);
                   nc.SetColumn(nc.GetColumn() + 1);
                   nc.CopyAndAddAfter(pc);
@@ -812,8 +812,8 @@ void tokenize_cleanup()
                }
 
                if (  (tmp->Len() > 0)
-                  && (  unc_isalpha(*tmp->GetStr().c_str())
-                     || (*tmp->GetStr().c_str() == '$')))
+                  && (  unc_isalpha(*tmp->GetText().GetLogText())
+                     || (*tmp->GetText().GetLogText() == '$')))
                {
                   tmp->SetType(CT_SQL_WORD);
                }
@@ -828,8 +828,8 @@ void tokenize_cleanup()
          && (next == pc->GetNext()))
       {
          // merge the two with a space between
-         pc->Str().append(' ');
-         pc->Str() += next->GetStr();
+         pc->Text().append(' ');
+         pc->Text() += next->GetText();
          pc->SetOrigColEnd(next->GetOrigColEnd());
          Chunk::Delete(next);
          next = pc->GetNextNcNnl();
@@ -875,7 +875,7 @@ void tokenize_cleanup()
 
          // Fix self keyword back to word when mixing c++/objective-c
          if (  pc->Is(CT_THIS)
-            && !strcmp(pc->Text(), "self")
+            && !strcmp(pc->GetLogText(), "self")
             && (  next->Is(CT_COMMA)
                || next->Is(CT_PAREN_CLOSE)))
          {
@@ -884,7 +884,7 @@ void tokenize_cleanup()
 
          // Fix self keyword back to word when mixing c++/objective-c
          if (  pc->Is(CT_THIS)
-            && !strcmp(pc->Text(), "self")
+            && !strcmp(pc->GetLogText(), "self")
             && (  next->Is(CT_COMMA)
                || next->Is(CT_PAREN_CLOSE)))
          {
@@ -895,7 +895,7 @@ void tokenize_cleanup()
       // Vala allows keywords to be used as identifiers
       if (language_is_set(lang_flag_e::LANG_VALA))
       {
-         if (  find_keyword_type(pc->Text(), pc->Len()) != CT_WORD
+         if (  find_keyword_type(pc->GetLogText(), pc->Len()) != CT_WORD
             && (  prev->Is(CT_DOT)
                || next->Is(CT_DOT)
                || prev->Is(CT_MEMBER)
@@ -952,7 +952,7 @@ void tokenize_cleanup()
             if (get_token_pattern_class(tmp->GetType()) != pattern_class_e::NONE)
             {
                LOG_FMT(LOBJCWORD, "%s(%d): @interface %zu:%zu change '%s' (%s) to CT_WORD\n",
-                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), tmp->Text(),
+                       __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), tmp->GetLogText(),
                        get_token_name(tmp->GetType()));
                tmp->SetType(CT_WORD);
             }
@@ -1057,11 +1057,11 @@ void tokenize_cleanup()
       if (  pc->Is(CT_PP_PRAGMA)
          && next->Is(CT_PREPROC_BODY))
       {
-         if (  (strncmp(next->GetStr().c_str(), "region", 6) == 0)
-            || (strncmp(next->GetStr().c_str(), "endregion", 9) == 0))
+         if (  (strncmp(next->GetText().GetLogText(), "region", 6) == 0)
+            || (strncmp(next->GetText().GetLogText(), "endregion", 9) == 0))
          // TODO: probably better use strncmp
          {
-            pc->SetType((*next->GetStr().c_str() == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
+            pc->SetType((*next->GetText().GetLogText() == 'r') ? CT_PP_REGION : CT_PP_ENDREGION);
 
             prev->SetParentType(pc->GetType());
          }

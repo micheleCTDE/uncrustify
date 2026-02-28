@@ -67,8 +67,8 @@ static bool while_needs_rewrite(Chunk *keyword, E_Token desired_type, const char
       return(false);
    }
 
-   if (  strcmp(condition->Text(), "true") != 0
-      && strcmp(condition->Text(), "1") != 0)
+   if (  strcmp(condition->GetLogText(), "true") != 0
+      && strcmp(condition->GetLogText(), "1") != 0)
    {
       return(false);
    }
@@ -93,13 +93,13 @@ static bool while_needs_rewrite(Chunk *keyword, E_Token desired_type, const char
       return(true);
    }
 
-   if (  strcmp(condition->Text(), "true") == 0
+   if (  strcmp(condition->GetLogText(), "true") == 0
       && strcmp(desired_condition, "true") != 0)
    {
       return(true);
    }
 
-   if (  strcmp(condition->Text(), "1") == 0
+   if (  strcmp(condition->GetLogText(), "1") == 0
       && strcmp(desired_condition, "1") != 0)
    {
       return(true);
@@ -116,18 +116,18 @@ void rewrite_loop_keyword(Chunk *keyword, E_Token new_type)
    {
    case CT_DO:
       keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("do") - keyword->Len());
-      keyword->Str() = "do";
+      keyword->Text() = "do";
       break;
 
    case CT_WHILE:
    case CT_WHILE_OF_DO:
       keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("while") - keyword->Len());
-      keyword->Str() = "while";
+      keyword->Text() = "while";
       break;
 
    case CT_FOR:
       keyword->SetOrigColEnd(keyword->GetOrigColEnd() + strlen("for") - keyword->Len());
-      keyword->Str() = "for";
+      keyword->Text() = "for";
       break;
 
    default:
@@ -166,14 +166,14 @@ static void rewrite_loop_condition(Chunk * &source, Chunk * &destination,
    {
       source->SetType(CT_SEMICOLON);
       source->SetParentType(CT_FOR);
-      source->Str() = ";";
+      source->Text() = ";";
       move_one_token(source, destination, desired_type);
       destination = (destination)->CopyAndAddAfter(destination);
    }
    else
    {
       source->SetType(CT_WORD);
-      source->Str() = desired_condition;
+      source->Text() = desired_condition;
       move_one_token(source, destination, desired_type);
    }
 
@@ -324,7 +324,7 @@ void rewrite_infinite_loops()
             // Add the final semicolon
             bottom = bottom->CopyAndAddAfter(bottom);
             bottom->SetType(CT_SEMICOLON);
-            bottom->Str() = ";";
+            bottom->Text() = ";";
 
             // Update the braces' parent types
             start_brace->SetParentType(CT_DO);

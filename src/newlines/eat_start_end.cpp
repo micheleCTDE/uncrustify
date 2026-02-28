@@ -72,7 +72,7 @@ void newlines_eat_start_end()
             log_rule_B("nl_start_of_file_min");
             chunk.CopyAndAddBefore(pc);
             LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline before '%s'\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText());
             Chunk *prev = pc->GetPrev();
             log_ruleNL("nl_start_of_file_min", prev);
             MARK_CHANGE();
@@ -133,7 +133,7 @@ void newlines_eat_start_end()
             log_rule_B("nl_end_of_file_min");
             chunk.CopyAndAddBefore(Chunk::NullChunkPtr);
             LOG_FMT(LNEWLINE, "%s(%d): %zu:%zu add newline after '%s'\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text());
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText());
             MARK_CHANGE();
          }
       }

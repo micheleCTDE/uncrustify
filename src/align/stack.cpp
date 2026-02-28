@@ -91,7 +91,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
    LOG_FUNC_ENTRY();
 
    LOG_FMT(LAS, "AlignStack::%s(%d): Candidate '%s': orig line %zu, column %zu, type %s, level %zu\n",
-           __func__, __LINE__, start->Text(), start->GetOrigLine(), start->GetColumn(), get_token_name(start->GetType()), start->GetLevel());
+           __func__, __LINE__, start->GetLogText(), start->GetOrigLine(), start->GetColumn(), get_token_name(start->GetType()), start->GetLevel());
    LOG_FMT(LAS, "AlignStack::%s(%d): seqnum %zu m_seqnum %zu\n", __func__, __LINE__, seqnum, m_seqnum);
 
    // Assign a seqnum if needed
@@ -225,9 +225,9 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       }
    }
    LOG_FMT(LAS, "AlignStack::%s(%3d): 'ref' orig line %zu, orig col %zu, text '%s', level %zu, type %s\n",
-           __func__, __LINE__, ref->GetOrigLine(), ref->GetOrigCol(), ref->Text(), ref->GetLevel(), get_token_name(ref->GetType()));
+           __func__, __LINE__, ref->GetOrigLine(), ref->GetOrigCol(), ref->GetLogText(), ref->GetLevel(), get_token_name(ref->GetType()));
    LOG_FMT(LAS, "AlignStack::%s(%3d): 'ali' orig line %zu, orig col %zu, text '%s', level %zu, type %s\n",
-           __func__, __LINE__, ali->GetOrigLine(), ali->GetOrigCol(), ali->Text(), ali->GetLevel(), get_token_name(ali->GetType()));
+           __func__, __LINE__, ali->GetOrigLine(), ali->GetOrigCol(), ali->GetLogText(), ali->GetLevel(), get_token_name(ali->GetType()));
    log_rule_B("align_keep_extra_space");
 
    // Tighten down the spacing between ref and start
@@ -246,7 +246,7 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
          if (next->IsNotNullChunk())
          {
             LOG_FMT(LAS, "AlignStack::%s(%3d): 'next' orig line %zu, orig col %zu, text '%s', level %zu, type %s\n",
-                    __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->Text(), next->GetLevel(), get_token_name(next->GetType()));
+                    __func__, __LINE__, next->GetOrigLine(), next->GetOrigCol(), next->GetLogText(), next->GetLevel(), get_token_name(next->GetType()));
             tmp_col += space_col_align(tmp, next);
             LOG_FMT(LAS, "AlignStack::%s(%3d): 'next' column %zu, level %zu, tmp_col %zu\n",
                     __func__, __LINE__, next->GetColumn(), next->GetLevel(), tmp_col);
@@ -316,15 +316,15 @@ void AlignStack::Add(Chunk *start, size_t seqnum)
       if (ali->Is(CT_PTR_TYPE))
       {
          LOG_FMT(LAS, "AlignStack::%s(%d): add [%s][%s]: 'ali' orig line %zu, column %zu, type %s, level %zu\n",
-                 __func__, __LINE__, ali->Text(), start->Text(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->GetLevel());
+                 __func__, __LINE__, ali->GetLogText(), start->GetLogText(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->GetLevel());
       }
       else
       {
          LOG_FMT(LAS, "AlignStack::%s(%3d): add [%s]: 'ali' orig line %zu, column %zu, type %s, level %zu\n",
-                 __func__, __LINE__, ali->Text(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->GetLevel());
+                 __func__, __LINE__, ali->GetLogText(), ali->GetOrigLine(), ali->GetColumn(), get_token_name(ali->GetType()), ali->GetLevel());
       }
       LOG_FMT(LAS, "AlignStack::%s(%3d): 'ali' alignment col_adj %d, ref '%s', endcol %zu\n",
-              __func__, __LINE__, ali->GetAlignData().col_adj, ref->Text(), endcol);
+              __func__, __LINE__, ali->GetAlignData().col_adj, ref->GetLogText(), endcol);
 
       if (m_min_col > endcol)
       {
@@ -433,8 +433,8 @@ void AlignStack::Flush()
    for (size_t idx = 0; idx < Len(); idx++)
    {
       Chunk *pc = m_aligned.Get(idx)->m_pc;
-      LOG_FMT(LAS, "AlignStack::%s(%d):   idx is %zu, pc->Text() is '%s', orig line is %zu, orig col is %zu, alignment col_adj is %d\n",
-              __func__, __LINE__, idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetAlignData().col_adj);
+      LOG_FMT(LAS, "AlignStack::%s(%d):   idx is %zu, text is '%s', orig line is %zu, orig col is %zu, alignment col_adj is %d\n",
+              __func__, __LINE__, idx, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetAlignData().col_adj);
    }
 
    // Recalculate the max_col - it may have shifted since the last Add()
@@ -506,8 +506,8 @@ void AlignStack::Flush()
    for (size_t idx = 0; idx < Len(); idx++)
    {
       Chunk *pc = m_aligned.Get(idx)->m_pc;
-      LOG_FMT(LAS, "AlignStack::%s(%d):   idx is %zu, pc->Text() is '%s', orig line is %zu, orig col is %zu, alignment col_adj is %d\n",
-              __func__, __LINE__, idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetAlignData().col_adj);
+      LOG_FMT(LAS, "AlignStack::%s(%d):   idx is %zu, text is '%s', orig line is %zu, orig col is %zu, alignment col_adj is %d\n",
+              __func__, __LINE__, idx, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), pc->GetAlignData().col_adj);
    }
 
    const ChunkStack::Entry *ce = nullptr;
@@ -542,8 +542,8 @@ void AlignStack::Flush()
       pc->AlignData().next = m_aligned.GetChunk(idx + 1);
 
       // Indent the token, taking col_adj into account
-      LOG_FMT(LAS, "AlignStack::%s(%d): orig line is %zu, orig col is %zu, Text() '%s', set to col %zu (adj is %d)\n",
-              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), tmp_col, pc->GetAlignData().col_adj);
+      LOG_FMT(LAS, "AlignStack::%s(%d): orig line is %zu, orig col is %zu, text '%s', set to col %zu (adj is %d)\n",
+              __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), tmp_col, pc->GetAlignData().col_adj);
       align_to_column(pc, tmp_col);
    }
 
@@ -632,12 +632,12 @@ void AlignStack::Debug()
          if (pc->Is(CT_PTR_TYPE))
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s][%s]: orig line is %zu, orig col is %zu, type is %s, level is %zu, brace level is %zu\n",
-                    __func__, __LINE__, idx, pc->Text(), pc->GetNext()->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetLevel(), pc->GetBraceLevel());
+                    __func__, __LINE__, idx, pc->GetLogText(), pc->GetNext()->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetLevel(), pc->GetBraceLevel());
          }
          else
          {
             LOG_FMT(LAS, "AlignStack::%s(%d): idx is %zu, [%s]: orig line is %zu, orig col is %zu, type is %s, level is %zu, brace level is %zu\n",
-                    __func__, __LINE__, idx, pc->Text(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetLevel(), pc->GetBraceLevel());
+                    __func__, __LINE__, idx, pc->GetLogText(), pc->GetOrigLine(), pc->GetOrigCol(), get_token_name(pc->GetType()), pc->GetLevel(), pc->GetBraceLevel());
          }
       }
    }

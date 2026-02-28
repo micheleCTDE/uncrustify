@@ -85,24 +85,24 @@ void newlines_class_colon_pos(E_Token tok)
 
       if (pc->Is(tok))
       {
-         LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
-                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+         LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
+                 __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
          ccolon = pc;
          prev   = pc->GetPrevNc();
          next   = pc->GetNextNc();
 
          if (pc->Is(CT_CONSTR_COLON))
          {
-            LOG_FMT(LBLANKD, "%s(%d): pc orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+            LOG_FMT(LBLANKD, "%s(%d): pc orig line is %zu, orig col is %zu, text '%s', type is %s\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
             Chunk *paren_vor_value = pc->GetNextType(CT_FPAREN_OPEN, pc->GetLevel());
 
             if (  with_acv
                && paren_vor_value->IsNotNullChunk())
             {
-               LOG_FMT(LBLANKD, "%s(%d): paren_vor_value orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
+               LOG_FMT(LBLANKD, "%s(%d): paren_vor_value orig line is %zu, orig col is %zu, text '%s', type is %s\n",
                        __func__, __LINE__, paren_vor_value->GetOrigLine(), paren_vor_value->GetOrigCol(),
-                       paren_vor_value->Text(), get_token_name(paren_vor_value->GetType()));
+                       paren_vor_value->GetLogText(), get_token_name(paren_vor_value->GetType()));
                constructorValue.NewLines(paren_vor_value->GetNlCount());
                constructorValue.Add(paren_vor_value);
             }
@@ -173,16 +173,16 @@ void newlines_class_colon_pos(E_Token tok)
          if (  pc->Is(CT_COMMA)
             && pc->GetLevel() == ccolon->GetLevel())
          {
-            LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
-                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->Text(), get_token_name(pc->GetType()));
+            LOG_FMT(LBLANKD, "%s(%d): orig line is %zu, orig col is %zu, text '%s', type is %s\n",
+                    __func__, __LINE__, pc->GetOrigLine(), pc->GetOrigCol(), pc->GetLogText(), get_token_name(pc->GetType()));
             Chunk *paren_vor_value = pc->GetNextType(CT_FPAREN_OPEN, pc->GetLevel());
 
             if (  with_acv
                && paren_vor_value->IsNotNullChunk())
             {
-               LOG_FMT(LBLANKD, "%s(%d): paren_vor_value orig line is %zu, orig col is %zu, Text() '%s', type is %s\n",
+               LOG_FMT(LBLANKD, "%s(%d): paren_vor_value orig line is %zu, orig col is %zu, text '%s', type is %s\n",
                        __func__, __LINE__, paren_vor_value->GetOrigLine(), paren_vor_value->GetOrigCol(),
-                       paren_vor_value->Text(), get_token_name(paren_vor_value->GetType()));
+                       paren_vor_value->GetLogText(), get_token_name(paren_vor_value->GetType()));
                constructorValue.NewLines(paren_vor_value->GetNlCount());
                constructorValue.Add(paren_vor_value);
             }

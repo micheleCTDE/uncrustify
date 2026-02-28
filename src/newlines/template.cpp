@@ -24,7 +24,7 @@ void newline_template(Chunk *start)
 
    LOG_FMT(LNFD, "%s(%d): called on %zu:%zu '%s' [%s/%s]\n",
            __func__, __LINE__, start->GetOrigLine(), start->GetOrigCol(),
-           start->Text(), get_token_name(start->GetType()), get_token_name(start->GetParentType()));
+           start->GetLogText(), get_token_name(start->GetType()), get_token_name(start->GetParentType()));
 
    log_rule_B("nl_template_start");
    bool add_start = options::nl_template_start();

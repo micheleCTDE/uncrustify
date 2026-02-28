@@ -1074,7 +1074,7 @@ void process_option_line(const std::string &config_line, const char *filename,
          UncText ut = std::string{ filename };
          ut.resize(static_cast<unsigned>(path_dirname_len(filename)));
          ut.append(include_path);
-         UNUSED(load_option_file(ut.c_str(), compat_level));
+         UNUSED(load_option_file(ut.GetLogText(), compat_level));
       }
       else
       {
