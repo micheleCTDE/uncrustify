@@ -522,25 +522,26 @@ void output_parsed(FILE *pfile, bool withOptions)
    // and              430: ... fprintf(pfile, "%s# %3zu>%19.19s[%19.19s] ...
    // here                                                xx xx   xx xx
 #ifdef WIN32
-   fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp     Nl  Text");
+   fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Len Br/Lvl/pp     Nl  Text");
 #else // not WIN32
-   fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Br/Lvl/pp             Flags   Nl  Text");
+   fprintf(pfile, "# Line                Tag         Parent_type  Type of the parent         Columns Len Br/Lvl/pp             Flags   Nl  Text");
 #endif // ifdef WIN32
 
    for (Chunk *pc = Chunk::GetHead(); pc->IsNotNullChunk(); pc = pc->GetNext())
    {
 #ifdef WIN32
-      fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%d/%d/%d][%d-%d]",
+      fprintf(pfile, "%s# %3d>%19.19s|%19.19s|%19.19s[%3d/%3d/%3d/%3d][%2d][%d/%d/%d][%d-%d]",
               eol_marker, static_cast<int>(pc->GetOrigLine()), get_token_name(pc->GetType()),
-              get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
-              static_cast<int>(pc->GetColumn()), static_cast<int>(pc->GetOrigCol()), static_cast<int>(pc->GetOrigColEnd()), static_cast<int>(pc->GetOrigPrevSp()),
-              static_cast<int>(pc->GetBraceLevel()), static_cast<int>(pc->GetLevel()), static_cast<int>(pc->GetPpLevel()), static_cast<int>(pc->GetNlCount()), pc->GetAfterTab());
+              get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()), static_cast<int>(pc->GetColumn()),
+              static_cast<int>(pc->GetOrigCol()), static_cast<int>(pc->GetOrigColEnd()), static_cast<int>(pc->GetOrigPrevSp()),
+              static_cast<int>(pc->Len()), static_cast<int>(pc->GetBraceLevel()), static_cast<int>(pc->GetLevel()),
+              static_cast<int>(pc->GetPpLevel()), static_cast<int>(pc->GetNlCount()), pc->GetAfterTab());
 #else // not WIN32
-      fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3zu][%zu/%zu/%zu]",
+      fprintf(pfile, "%s# %3zu>%19.19s|%19.19s|%19.19s[%3zu/%3zu/%3zu/%3zu][%2zu][%zu/%zu/%zu]",
               eol_marker, pc->GetOrigLine(), get_token_name(pc->GetType()),
               get_token_name(pc->GetParentType()), get_token_name(pc->GetTypeOfParent()),
               pc->GetColumn(), pc->GetOrigCol(), pc->GetOrigColEnd(), pc->GetOrigPrevSp(),
-              pc->GetBraceLevel(), pc->GetLevel(), pc->GetPpLevel());
+              pc->Len(), pc->GetBraceLevel(), pc->GetLevel(), pc->GetPpLevel());
       // Print pc flags in groups of 4 hex characters
       char flag_string[24];
       snprintf(flag_string, sizeof(flag_string), "%16llx", static_cast<PcfFlags::int_t>(pc->GetFlags()));
